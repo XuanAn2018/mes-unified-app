@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MES Unified App (Register & Confirm)</title>
     <style>
+        /* CSS không thay đổi */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
         .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
         h2 { margin-top: 0; font-size: 1.2rem; color: #333; }
@@ -28,12 +29,9 @@
         <h2>⚙️ Cài đặt</h2>
         <label>Chuỗi Cookie (dùng chung):</label>
         <input type="text" id="cookie" placeholder="ASP.NET_SessionId=..." onchange="saveConfig()">
-
-        <!-- Phần cài đặt URL tùy chỉnh, mặc định ẩn đi -->
         <div id="custom-urls" class="hidden">
             <label>Auto Register Worker URL (Tùy chỉnh):</label>
             <input type="text" id="registerWorkerUrl" onchange="saveConfig()">
-            
             <label>Final Confirm Worker URL (Tùy chỉnh):</label>
             <input type="text" id="confirmWorkerUrl" onchange="saveConfig()">
         </div>
@@ -46,80 +44,75 @@
             <input type="text" id="packageGroup" placeholder="Nhập Package Group" style="flex: 1; margin-bottom: 0;">
             <button onclick="fetchAndDisplayPackages()" style="width: 120px; margin-bottom: 0;">Tải DS</button>
         </div>
-        
         <div id="package-list"></div>
-
         <div id="action-buttons" style="display: none; margin-top: 15px;">
             <button onclick="runFullProcess()" class="main-action">🚀 Bắt đầu Quy trình (Register -> Confirm)</button>
         </div>
-        
         <div id="log-container"></div>
     </div>
 
     <script>
-        // *** THAY ĐỔI QUAN TRỌNG: GÁN CỨNG URL MẶC ĐỊNH ***
         const DEFAULT_REGISTER_URL = "https://auto-register.chiscoong-cloudflare-com.workers.dev/";
         const DEFAULT_CONFIRM_URL = "https://mes-final-confirm.chiscoong-cloudflare-com.workers.dev/";
 
+        // *** THAY ĐỔI 1: Thêm hàm delay ***
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+
+        // ... (các hàm khác không đổi cho đến runFullProcess)
+        window.onload = function() { /*...*/ }
+        function saveConfig() { /*...*/ }
+        function toggleCustomUrls() { /*...*/ }
+        function getWorkerUrls() { /*...*/ }
+        const logContainer = document.getElementById('log-container');
+        function log(message, color = '#fff') { /*...*/ }
+        async function fetchAndDisplayPackages() { /*...*/ }
+        function renderPackageList(packages) { /*...*/ }
+        function toggleAll(source) { /*...*/ }
+
+        // Dán các hàm không đổi vào đây
         window.onload = function() {
-            // Load cookie và các URL tùy chỉnh (nếu có)
             document.getElementById('cookie').value = localStorage.getItem('cookie') || '';
             document.getElementById('registerWorkerUrl').value = localStorage.getItem('registerWorkerUrl') || '';
             document.getElementById('confirmWorkerUrl').value = localStorage.getItem('confirmWorkerUrl') || '';
         }
-
         function saveConfig() {
             localStorage.setItem('cookie', document.getElementById('cookie').value);
             localStorage.setItem('registerWorkerUrl', document.getElementById('registerWorkerUrl').value);
             localStorage.setItem('confirmWorkerUrl', document.getElementById('confirmWorkerUrl').value);
         }
-
         function toggleCustomUrls() {
             document.getElementById('custom-urls').classList.toggle('hidden');
         }
-
-        // Hàm helper để lấy URL, ưu tiên URL tùy chỉnh nếu có
         function getWorkerUrls() {
             const customRegisterUrl = document.getElementById('registerWorkerUrl').value.trim();
             const customConfirmUrl = document.getElementById('confirmWorkerUrl').value.trim();
             return {
-                register: (customRegisterUrl || DEFAULT_REGISTER_URL).replace(/\/$/, ""), // Xóa dấu / ở cuối
+                register: (customRegisterUrl || DEFAULT_REGISTER_URL).replace(/\/$/, ""),
                 confirm: (customConfirmUrl || DEFAULT_CONFIRM_URL).replace(/\/$/, "")
             };
         }
-        
-        const logContainer = document.getElementById('log-container');
         function log(message, color = '#fff') {
             const time = new Date().toLocaleTimeString();
             logContainer.innerHTML += `<span style="color: #888;">[${time}]</span> <span style="color: ${color};">${message}</span>\n`;
             logContainer.scrollTop = logContainer.scrollHeight;
         }
-
         async function fetchAndDisplayPackages() {
             const urls = getWorkerUrls();
             const cookie = document.getElementById('cookie').value.trim();
             const group = document.getElementById('packageGroup').value.trim();
-            
             if (!urls.confirm || !cookie || !group) return alert("Vui lòng nhập Cookie và Package Group.");
-            
             log(`🔍 Đang tải danh sách cho group: ${group}`, '#0ff');
             try {
-                const response = await fetch(`${urls.confirm}/api/get-packages?group=${group}`, {
-                    headers: { 'X-MES-Cookie': cookie }
-                });
+                const response = await fetch(`${urls.confirm}/api/get-packages?group=${group}`, { headers: { 'X-MES-Cookie': cookie } });
                 if (!response.ok) throw new Error(`Server báo lỗi: ${response.status}`);
-                
                 const data = await response.json();
                 if(data.error) throw new Error(data.error);
-
                 renderPackageList(data);
                 log(`✅ Đã tải ${data.length} package.`, '#0f0');
-
             } catch (e) {
                 log(`❌ Lỗi tải danh sách: ${e.message}`, '#f00');
             }
         }
-        
         function renderPackageList(packages) {
             const container = document.getElementById('package-list');
             if (packages.length === 0) {
@@ -127,40 +120,18 @@
                 document.getElementById('action-buttons').style.display = 'none';
                 return;
             }
-            
-            let tableHTML = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" onchange="toggleAll(this)"></th>
-                            <th>MxPackage</th>
-                            <th>Status Gốc</th>
-                            <th>Register Status</th>
-                            <th>Final Confirm Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
+            let tableHTML = `<table><thead><tr><th><input type="checkbox" onchange="toggleAll(this)"></th><th>MxPackage</th><th>Status Gốc</th><th>Register Status</th><th>Final Confirm Status</th></tr></thead><tbody>`;
             packages.forEach(pkg => {
-                tableHTML += `
-                    <tr id="row-${pkg.SeqNo}">
-                        <td><input type="checkbox" class="pkg-checkbox" data-pkg-name="${pkg.MxPackage}" data-seq="${pkg.SeqNo}"></td>
-                        <td>${pkg.MxPackage}</td>
-                        <td>${pkg.StatusName}</td>
-                        <td id="register-status-${pkg.SeqNo}" class="status-icon">--</td>
-                        <td id="confirm-status-${pkg.SeqNo}" class="status-icon">--</td>
-                    </tr>
-                `;
+                tableHTML += `<tr id="row-${pkg.SeqNo}"><td><input type="checkbox" class="pkg-checkbox" data-pkg-name="${pkg.MxPackage}" data-seq="${pkg.SeqNo}"></td><td>${pkg.MxPackage}</td><td>${pkg.StatusName}</td><td id="register-status-${pkg.SeqNo}" class="status-icon">--</td><td id="confirm-status-${pkg.SeqNo}" class="status-icon">--</td></tr>`;
             });
             tableHTML += `</tbody></table>`;
             container.innerHTML = tableHTML;
             document.getElementById('action-buttons').style.display = 'block';
         }
-
         function toggleAll(source) {
             document.querySelectorAll('.pkg-checkbox').forEach(checkbox => checkbox.checked = source.checked);
         }
-        
+
         async function runFullProcess() {
             const urls = getWorkerUrls();
             const cookie = document.getElementById('cookie').value.trim();
@@ -191,12 +162,15 @@
                         body: JSON.stringify({ package: pkgName })
                     });
                     const result = await response.json();
+                    
+                    // *** THAY ĐỔI 2: Hiển thị lỗi chi tiết ***
                     if (result.ok) {
                         log(`[${pkgName}] ✅ Register thành công: ${result.message}`, '#0f0');
                         registerStatusCell.innerHTML = '✅';
                         registerSuccess = true;
                     } else {
-                        log(`[${pkgName}] ❌ Register thất bại: ${result.message}`, '#f00');
+                        // In ra lỗi cụ thể từ worker
+                        log(`[${pkgName}] ❌ Register thất bại: ${result.message || 'Lỗi không xác định'}`, '#f00');
                         registerStatusCell.innerHTML = '❌';
                     }
                 } catch(e) {
@@ -206,6 +180,10 @@
 
                 // --- Bước 2: Final Confirm (chỉ chạy nếu bước 1 thành công) ---
                 if (registerSuccess) {
+                    // *** THAY ĐỔI 3: Thêm delay trước bước 2 ***
+                    log(`[${pkgName}] ⏳ Chờ 2 giây trước khi Confirm...`, '#888');
+                    await delay(2000); // Chờ 2 giây
+
                     log(`[${pkgName}] Bước 2: Bắt đầu Final Confirm...`, '#fff');
                     confirmStatusCell.innerHTML = '⏳';
                     try {
@@ -219,7 +197,7 @@
                             log(`[${pkgName}] ✅ Final Confirm thành công!`, '#0f0');
                             confirmStatusCell.innerHTML = '✅';
                         } else {
-                            log(`[${pkgName}] ❌ Final Confirm thất bại: ${result.message}`, '#f00');
+                            log(`[${pkgName}] ❌ Final Confirm thất bại: ${result.message || 'Lỗi không xác định'}`, '#f00');
                             confirmStatusCell.innerHTML = '❌';
                         }
                     } catch(e) {
