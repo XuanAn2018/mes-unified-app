@@ -123,6 +123,7 @@
             const cookie = document.getElementById('cookie').value.trim();
             const group = document.getElementById('packageGroup').value.trim();
             const selected = document.querySelectorAll('.pkg-checkbox:checked');
+
             if (selected.length === 0) return alert("Vui lòng chọn ít nhất một package.");
             
             log(`🚀 Bắt đầu quy trình cho ${selected.length} package...`, '#ff0');
@@ -136,6 +137,7 @@
                 const confirmStatusCell = document.getElementById(`confirm-status-${seqNo}`);
                 let registerSuccess = false;
 
+                // --- Bước 1: Auto Register ---
                 log(`[${pkgName}] Bước 1: Bắt đầu Register...`, '#fff');
                 registerStatusCell.innerHTML = '⏳';
                 try {
@@ -146,7 +148,6 @@
                     });
                     const result = await response.json();
                     
-                    // *** THAY ĐỔI: Hiển thị lỗi chi tiết ***
                     if (result.ok) {
                         log(`[${pkgName}] ✅ Register thành công: ${result.message}`, '#0f0');
                         registerStatusCell.innerHTML = '✅';
@@ -160,8 +161,8 @@
                     registerStatusCell.innerHTML = '💥';
                 }
 
+                // --- Bước 2: Final Confirm (chỉ chạy nếu bước 1 thành công) ---
                 if (registerSuccess) {
-                    // *** THAY ĐỔI: Thêm delay 2 giây ***
                     log(`[${pkgName}] ⏳ Chờ 2 giây...`, '#888');
                     await delay(2000);
 
@@ -189,8 +190,15 @@
                      log(`[${pkgName}] ⏩ Bỏ qua bước Final Confirm do Register thất bại.`, '#ff0');
                      confirmStatusCell.innerHTML = '⏩';
                 }
+                
+                // *** THAY ĐỔI QUAN TRỌNG NHẤT: DELAY GIỮA CÁC PACKAGE ***
                 log('--------------------------------', '#888');
+                if (checkbox !== selected[selected.length - 1]) { // Nếu không phải là package cuối cùng
+                    log(`⏳ Chờ 3 giây trước khi xử lý package tiếp theo...`, '#888');
+                    await delay(3000);
+                }
             }
+            
             log(`🎉 QUY TRÌNH HOÀN TẤT!`, '#ff0');
             mainBtn.disabled = false;
         }
