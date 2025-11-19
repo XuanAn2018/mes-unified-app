@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Uploader - MES Unified App</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar (giống index.html) -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Copy sidebar từ index.html -->
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Batch Uploader</h1>
+                <p class="page-description">Tải lên dữ liệu hàng loạt</p>
+            </div>
+            
+            <div class="content-body">
+                <div class="app-frame-wrapper">
+                    <div class="loading-indicator" id="loadingBatch">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Đang tải Batch Uploader...</p>
+                    </div>
+                    <iframe 
+                        src="https://xuanan2018.github.io/mes-batch-uploader/" 
+                        class="app-container-frame"
+                        onload="document.getElementById('loadingBatch').style.display='none'"
+                    ></iframe>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
