@@ -35,16 +35,15 @@ MES Unified App là nền tảng tích hợp tập trung cho tất cả các ứ
 - **Responsive**: Mobile-first design
 
 ## 🎨 Tính năng giao diện
-🎯 Navigation thông minh - Sidebar có thể thu gọn
-📱 Responsive design - Tối ưu cho mobile & desktop
-⚡ Performance - Tải nhanh, trải nghiệm mượt mà
-🎨 Modern UI - Giao diện hiện đại, chuyên nghiệp
-🔧 Easy maintenance - Dễ dàng thêm ứng dụng mới
+- 🎯 Navigation thông minh - Sidebar có thể thu gọn
+- 📱 Responsive design - Tối ưu cho mobile & desktop
+- ⚡ Performance - Tải nhanh, trải nghiệm mượt mà
+- 🎨 Modern UI - Giao diện hiện đại, chuyên nghiệp
+- 🔧 Easy maintenance - Dễ dàng thêm ứng dụng mới
 
 ## ⌨️ Phím tắt
 `Ctrl + B`/ `Cmd + B` - Thu gọn/mở rộng sidebar
-
-Escape - Đóng sidebar trên mobile
+`Escape` - Đóng sidebar trên mobile
 
 👥 Tác giả
 Xuan An - [GitHub](https://github.com/XuanAn2018)
