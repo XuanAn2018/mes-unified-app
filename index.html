@@ -55,6 +55,13 @@
                     </li>
                 </ul>
             </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>MES System</span>
+                </div>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -70,27 +77,64 @@
                         <div class="welcome-icon">
                             <i class="fas fa-industry"></i>
                         </div>
+                        <h2>MES Unified Application</h2>
+                        <p>Hệ thống quản lý sản xuất thống nhất - Tất cả trong một</p>
                         
                         <div class="app-grid">
-                            <div class="app-card" onclick="location.href='batch-uploader.html'">
+                            <a href="batch-uploader.html" class="app-card">
                                 <i class="fas fa-upload"></i>
                                 <h3>Batch Uploader</h3>
                                 <p>Tải lên dữ liệu hàng loạt</p>
-                            </div>
-                            <div class="app-card" onclick="location.href='defect.html'">
+                                <div class="app-status">🟢 Đang hoạt động</div>
+                            </a>
+                            <a href="defect.html" class="app-card">
                                 <i class="fas fa-bug"></i>
                                 <h3>Defect Management</h3>
                                 <p>Quản lý lỗi sản phẩm</p>
-                            </div>
-                            <div class="app-card" onclick="location.href='register.html'">
+                                <div class="app-status">🟢 Đang hoạt động</div>
+                            </a>
+                            <a href="register.html" class="app-card">
                                 <i class="fas fa-edit"></i>
                                 <h3>Register</h3>
                                 <p>Đăng ký thông tin sản xuất</p>
-                            </div>
-                            <div class="app-card" onclick="location.href='confirm.html'">
+                                <div class="app-status">🟢 Đang hoạt động</div>
+                            </a>
+                            <a href="confirm.html" class="app-card">
                                 <i class="fas fa-check-circle"></i>
                                 <h3>Confirm</h3>
                                 <p>Xác nhận quy trình</p>
+                                <div class="app-status">🟢 Đang hoạt động</div>
+                            </a>
+                            <!-- THÊM 2 ỨNG DỤNG MỚI VÀO ĐÂY -->
+                            <a href="https://nnct2023.github.io/Addin-NXA/" target="_blank" class="app-card">
+                                <i class="fas fa-puzzle-piece"></i>
+                                <h3>Addin NXA</h3>
+                                <p>Excel Add-in utilities and tools</p>
+                                <div class="app-status">🟢 Đang hoạt động</div>
+                            </a>
+                            <a href="https://xuanan2018.github.io/google-drive-converter/" target="_blank" class="app-card">
+                                <i class="fas fa-sync-alt"></i>
+                                <h3>Drive Converter</h3>
+                                <p>Chuyển đổi và xử lý file</p>
+                                <div class="app-status">🟢 Đang hoạt động</div>
+                            </a>
+                        </div>
+
+                        <div class="quick-stats">
+                            <div class="stat-card">
+                                <i class="fas fa-cubes"></i>
+                                <div class="stat-number">6</div>
+                                <div class="stat-label">Ứng dụng</div>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-check-circle"></i>
+                                <div class="stat-number">100%</div>
+                                <div class="stat-label">Sẵn sàng</div>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-clock"></i>
+                                <div class="stat-number">24/7</div>
+                                <div class="stat-label">Hoạt động</div>
                             </div>
                         </div>
                     </div>
@@ -100,5 +144,144 @@
     </div>
 
     <script src="assets/js/main.js"></script>
+
+    <style>
+    .welcome-page {
+        padding: 40px;
+        text-align: center;
+    }
+
+    .welcome-icon {
+        font-size: 4rem;
+        color: #3498db;
+        margin-bottom: 20px;
+    }
+
+    .welcome-content h2 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 2.5rem;
+    }
+
+    .welcome-content > p {
+        color: #7f8c8d;
+        font-size: 1.2rem;
+        margin-bottom: 40px;
+    }
+
+    .app-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        max-width: 1200px;
+        margin: 0 auto 50px;
+    }
+
+    .app-card {
+        background: white;
+        padding: 30px 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        border: 2px solid transparent;
+        position: relative;
+    }
+
+    .app-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        border-color: #3498db;
+    }
+
+    .app-card i {
+        font-size: 3rem;
+        color: #3498db;
+        margin-bottom: 20px;
+    }
+
+    .app-card h3 {
+        color: #2c3e50;
+        margin-bottom: 12px;
+        font-size: 1.4rem;
+    }
+
+    .app-card p {
+        color: #7f8c8d;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .app-status {
+        font-size: 0.85rem;
+        color: #27ae60;
+        font-weight: 600;
+    }
+
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 25px 20px;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    .stat-card i {
+        font-size: 2.5rem;
+        color: #3498db;
+        margin-bottom: 15px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .welcome-page {
+            padding: 20px;
+        }
+
+        .welcome-content h2 {
+            font-size: 2rem;
+        }
+
+        .app-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .quick-stats {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-card {
+            padding: 20px 15px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+        }
+    }
+    </style>
 </body>
 </html>
