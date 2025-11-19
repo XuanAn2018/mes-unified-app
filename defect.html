@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defect Management - MES Unified App</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-industry"></i>
+                    <span class="site-title">MES Unified App</span>
+                </div>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="nav-icon fas fa-home"></i>
+                            <span class="nav-text">Trang Chủ</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="batch-uploader.html" class="nav-link">
+                            <i class="nav-icon fas fa-upload"></i>
+                            <span class="nav-text">Batch Uploader</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="defect.html" class="nav-link">
+                            <i class="nav-icon fas fa-bug"></i>
+                            <span class="nav-text">Defect Management</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="register.html" class="nav-link">
+                            <i class="nav-icon fas fa-edit"></i>
+                            <span class="nav-text">Register</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="confirm.html" class="nav-link">
+                            <i class="nav-icon fas fa-check-circle"></i>
+                            <span class="nav-text">Confirm</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>MES System</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Defect Management</h1>
+                <p class="page-description">Quản lý lỗi sản phẩm và chất lượng</p>
+            </div>
+            
+            <div class="content-body">
+                <div class="app-frame-wrapper">
+                    <div class="loading-indicator" id="loadingDefect">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Đang tải Defect Management...</p>
+                    </div>
+                    <iframe 
+                        src="https://xuanan2018.github.io/mes-defect/" 
+                        class="app-container-frame"
+                        onload="document.getElementById('loadingDefect').style.display='none'"
+                    ></iframe>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
