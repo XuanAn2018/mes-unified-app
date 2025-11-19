@@ -3,205 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MES Unified App (Register & Confirm)</title>
-    <style>
-        /* CSS không thay đổi */
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
-        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        h2 { margin-top: 0; font-size: 1.2rem; color: #333; }
-        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9rem; color: #555; }
-        input, button { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        button { background: #007bff; color: white; border: none; font-weight: bold; cursor: pointer; }
-        button.main-action { background: #28a745; }
-        button:disabled { background: #ccc; }
-        #log-container { background: #222; color: #fff; font-family: 'Courier New', Courier, monospace; font-size: 0.8rem; padding: 15px; border-radius: 8px; height: 200px; overflow-y: auto; white-space: pre-wrap; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
-        th { font-size: 0.9rem; }
-        .status-icon { font-size: 1.2rem; }
-        .hidden { display: none; }
-        .settings-toggle { text-align: center; color: #007bff; cursor: pointer; margin-top: 10px; font-size: 0.9rem; }
-    </style>
+    <title>MES Unified Application</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="card">
-        <h2>⚙️ Cài đặt</h2>
-        <label>Chuỗi Cookie (dùng chung):</label>
-        <input type="text" id="cookie" placeholder="ASP.NET_SessionId=..." onchange="saveConfig()">
-        <div id="custom-urls" class="hidden">
-            <label>Auto Register Worker URL (Tùy chỉnh):</label>
-            <input type="text" id="registerWorkerUrl" onchange="saveConfig()">
-            <label>Final Confirm Worker URL (Tùy chỉnh):</label>
-            <input type="text" id="confirmWorkerUrl" onchange="saveConfig()">
-        </div>
-        <div class="settings-toggle" onclick="toggleCustomUrls()">Sử dụng Worker URL tùy chỉnh</div>
-    </div>
-    <div class="card">
-        <h2>🔍 Tra cứu & Thực thi</h2>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="packageGroup" placeholder="Nhập Package Group" style="flex: 1; margin-bottom: 0;">
-            <button onclick="fetchAndDisplayPackages()" style="width: 120px; margin-bottom: 0;">Tải DS</button>
-        </div>
-        <div id="package-list"></div>
-        <div id="action-buttons" style="display: none; margin-top: 15px;">
-            <button onclick="runFullProcess()" class="main-action">🚀 Bắt đầu Quy trình (Register -> Confirm)</button>
-        </div>
-        <div id="log-container"></div>
-    </div>
-
-    <script>
-        const DEFAULT_REGISTER_URL = "https://auto-register.chiscoong-cloudflare-com.workers.dev/";
-        const DEFAULT_CONFIRM_URL = "https://mes-final-confirm.chiscoong-cloudflare-com.workers.dev/";
-        const delay = ms => new Promise(res => setTimeout(res, ms));
-
-        // Dán toàn bộ các hàm JavaScript từ phiên bản trước vào đây
-        window.onload = function() {
-            document.getElementById('cookie').value = localStorage.getItem('cookie') || '';
-            document.getElementById('registerWorkerUrl').value = localStorage.getItem('registerWorkerUrl') || '';
-            document.getElementById('confirmWorkerUrl').value = localStorage.getItem('confirmWorkerUrl') || '';
-        }
-        function saveConfig() {
-            localStorage.setItem('cookie', document.getElementById('cookie').value);
-            localStorage.setItem('registerWorkerUrl', document.getElementById('registerWorkerUrl').value);
-            localStorage.setItem('confirmWorkerUrl', document.getElementById('confirmWorkerUrl').value);
-        }
-        function toggleCustomUrls() {
-            document.getElementById('custom-urls').classList.toggle('hidden');
-        }
-        function getWorkerUrls() {
-            const customRegisterUrl = document.getElementById('registerWorkerUrl').value.trim();
-            const customConfirmUrl = document.getElementById('confirmWorkerUrl').value.trim();
-            return {
-                register: (customRegisterUrl || DEFAULT_REGISTER_URL).replace(/\/$/, ""),
-                confirm: (customConfirmUrl || DEFAULT_CONFIRM_URL).replace(/\/$/, "")
-            };
-        }
-        const logContainer = document.getElementById('log-container');
-        function log(message, color = '#fff') {
-            const time = new Date().toLocaleTimeString();
-            logContainer.innerHTML += `<span style="color: #888;">[${time}]</span> <span style="color: ${color};">${message}</span>\n`;
-            logContainer.scrollTop = logContainer.scrollHeight;
-        }
-        async function fetchAndDisplayPackages() {
-            const urls = getWorkerUrls();
-            const cookie = document.getElementById('cookie').value.trim();
-            const group = document.getElementById('packageGroup').value.trim();
-            if (!urls.confirm || !cookie || !group) return alert("Vui lòng nhập Cookie và Package Group.");
-            log(`🔍 Đang tải danh sách cho group: ${group}`, '#0ff');
-            try {
-                const response = await fetch(`${urls.confirm}/api/get-packages?group=${group}`, { headers: { 'X-MES-Cookie': cookie } });
-                if (!response.ok) throw new Error(`Server báo lỗi: ${response.status}`);
-                const data = await response.json();
-                if(data.error) throw new Error(data.error);
-                renderPackageList(data);
-                log(`✅ Đã tải ${data.length} package.`, '#0f0');
-            } catch (e) {
-                log(`❌ Lỗi tải danh sách: ${e.message}`, '#f00');
-            }
-        }
-        function renderPackageList(packages) {
-            const container = document.getElementById('package-list');
-            if (packages.length === 0) {
-                container.innerHTML = "<p>Không tìm thấy package nào.</p>";
-                document.getElementById('action-buttons').style.display = 'none';
-                return;
-            }
-            let tableHTML = `<table><thead><tr><th><input type="checkbox" onchange="toggleAll(this)"></th><th>MxPackage</th><th>Status Gốc</th><th>Register Status</th><th>Final Confirm Status</th></tr></thead><tbody>`;
-            packages.forEach(pkg => {
-                tableHTML += `<tr id="row-${pkg.SeqNo}"><td><input type="checkbox" class="pkg-checkbox" data-pkg-name="${pkg.MxPackage}" data-seq="${pkg.SeqNo}"></td><td>${pkg.MxPackage}</td><td>${pkg.StatusName}</td><td id="register-status-${pkg.SeqNo}" class="status-icon">--</td><td id="confirm-status-${pkg.SeqNo}" class="status-icon">--</td></tr>`;
-            });
-            tableHTML += `</tbody></table>`;
-            container.innerHTML = tableHTML;
-            document.getElementById('action-buttons').style.display = 'block';
-        }
-        function toggleAll(source) {
-            document.querySelectorAll('.pkg-checkbox').forEach(checkbox => checkbox.checked = source.checked);
-        }
-
-        async function runFullProcess() {
-            const urls = getWorkerUrls();
-            const cookie = document.getElementById('cookie').value.trim();
-            const group = document.getElementById('packageGroup').value.trim();
-            const selected = document.querySelectorAll('.pkg-checkbox:checked');
-
-            if (selected.length === 0) return alert("Vui lòng chọn ít nhất một package.");
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-industry"></i>
+                    <span class="site-title">MES Unified App</span>
+                </div>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
             
-            log(`🚀 Bắt đầu quy trình cho ${selected.length} package...`, '#ff0');
-            const mainBtn = document.querySelector('.main-action');
-            mainBtn.disabled = true;
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item active">
+                        <a href="index.html" class="nav-link">
+                            <i class="nav-icon fas fa-home"></i>
+                            <span class="nav-text">Trang Chủ</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="batch-uploader.html" class="nav-link">
+                            <i class="nav-icon fas fa-upload"></i>
+                            <span class="nav-text">Batch Uploader</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="defect.html" class="nav-link">
+                            <i class="nav-icon fas fa-bug"></i>
+                            <span class="nav-text">Defect Management</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="register.html" class="nav-link">
+                            <i class="nav-icon fas fa-edit"></i>
+                            <span class="nav-text">Register</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="confirm.html" class="nav-link">
+                            <i class="nav-icon fas fa-check-circle"></i>
+                            <span class="nav-text">Confirm</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-            for (const checkbox of selected) {
-                const pkgName = checkbox.dataset.pkgName;
-                const seqNo = checkbox.dataset.seq;
-                const registerStatusCell = document.getElementById(`register-status-${seqNo}`);
-                const confirmStatusCell = document.getElementById(`confirm-status-${seqNo}`);
-                let registerSuccess = false;
-
-                // --- Bước 1: Auto Register ---
-                log(`[${pkgName}] Bước 1: Bắt đầu Register...`, '#fff');
-                registerStatusCell.innerHTML = '⏳';
-                try {
-                    const response = await fetch(`${urls.register}/api/auto-register`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-MES-Cookie': cookie },
-                        body: JSON.stringify({ package: pkgName })
-                    });
-                    const result = await response.json();
-                    
-                    if (result.ok) {
-                        log(`[${pkgName}] ✅ Register thành công: ${result.message}`, '#0f0');
-                        registerStatusCell.innerHTML = '✅';
-                        registerSuccess = true;
-                    } else {
-                        log(`[${pkgName}] ❌ Register thất bại: ${result.message || 'Lỗi không xác định'}`, '#f00');
-                        registerStatusCell.innerHTML = '❌';
-                    }
-                } catch(e) {
-                    log(`[${pkgName}] 💥 Lỗi hệ thống khi Register: ${e.message}`, '#f00');
-                    registerStatusCell.innerHTML = '💥';
-                }
-
-                // --- Bước 2: Final Confirm (chỉ chạy nếu bước 1 thành công) ---
-                if (registerSuccess) {
-                    log(`[${pkgName}] ⏳ Chờ 2 giây...`, '#888');
-                    await delay(2000);
-
-                    log(`[${pkgName}] Bước 2: Bắt đầu Final Confirm...`, '#fff');
-                    confirmStatusCell.innerHTML = '⏳';
-                    try {
-                        const response = await fetch(`${urls.confirm}/api/confirm`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json', 'X-MES-Cookie': cookie },
-                            body: JSON.stringify({ packageGroup: group, seqNo: parseInt(seqNo) })
-                        });
-                        const result = await response.json();
-                        if (result.ok) {
-                            log(`[${pkgName}] ✅ Final Confirm thành công!`, '#0f0');
-                            confirmStatusCell.innerHTML = '✅';
-                        } else {
-                            log(`[${pkgName}] ❌ Final Confirm thất bại: ${result.message || 'Lỗi không xác định'}`, '#f00');
-                            confirmStatusCell.innerHTML = '❌';
-                        }
-                    } catch(e) {
-                        log(`[${pkgName}] 💥 Lỗi hệ thống khi Final Confirm: ${e.message}`, '#f00');
-                        confirmStatusCell.innerHTML = '💥';
-                    }
-                } else {
-                     log(`[${pkgName}] ⏩ Bỏ qua bước Final Confirm do Register thất bại.`, '#ff0');
-                     confirmStatusCell.innerHTML = '⏩';
-                }
-                
-                // *** THAY ĐỔI QUAN TRỌNG NHẤT: DELAY GIỮA CÁC PACKAGE ***
-                log('--------------------------------', '#888');
-                if (checkbox !== selected[selected.length - 1]) { // Nếu không phải là package cuối cùng
-                    log(`⏳ Chờ 3 giây trước khi xử lý package tiếp theo...`, '#888');
-                    await delay(3000);
-                }
-            }
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Chào mừng đến với MES Unified App</h1>
+                <p class="page-description">Chọn một chức năng từ menu bên trái để bắt đầu</p>
+            </div>
             
-            log(`🎉 QUY TRÌNH HOÀN TẤT!`, '#ff0');
-            mainBtn.disabled = false;
-        }
-    </script>
+            <div class="content-body">
+                <div class="welcome-page">
+                    <div class="welcome-content">
+                        <div class="welcome-icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        
+                        <div class="app-grid">
+                            <div class="app-card" onclick="location.href='batch-uploader.html'">
+                                <i class="fas fa-upload"></i>
+                                <h3>Batch Uploader</h3>
+                                <p>Tải lên dữ liệu hàng loạt</p>
+                            </div>
+                            <div class="app-card" onclick="location.href='defect.html'">
+                                <i class="fas fa-bug"></i>
+                                <h3>Defect Management</h3>
+                                <p>Quản lý lỗi sản phẩm</p>
+                            </div>
+                            <div class="app-card" onclick="location.href='register.html'">
+                                <i class="fas fa-edit"></i>
+                                <h3>Register</h3>
+                                <p>Đăng ký thông tin sản xuất</p>
+                            </div>
+                            <div class="app-card" onclick="location.href='confirm.html'">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>Confirm</h3>
+                                <p>Xác nhận quy trình</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
