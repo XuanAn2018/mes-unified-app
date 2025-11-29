@@ -3,90 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - MES Unified App</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>MES Package - MES Unified</title>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. THEME SYSTEM (Đồng bộ) --- */
+        :root {
+            --primary-color: #3b82f6; 
+            --sidebar-bg: #0f172a; 
+            --sidebar-text: #94a3b8;
+            --body-bg: #f1f5f9; 
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* --- 2. RESET & LAYOUT --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--body-bg); color: var(--text-main); min-height: 100vh; overflow: hidden; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        .app-container { display: flex; height: 100vh; }
+
+        /* --- 3. SIDEBAR --- */
+        .sidebar {
+            width: 72px;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 50;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .sidebar.expanded { width: 260px; }
+
+        .sidebar-header {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .sidebar.expanded .sidebar-header { justify-content: flex-start; padding-left: 20px; }
+        
+        .logo-area { display: none; opacity: 0; white-space: nowrap; margin-left: 15px; font-weight: 600; font-size: 1.2rem; color: #fff; }
+        .sidebar.expanded .logo-area { display: block; opacity: 1; transition: opacity 0.3s; }
+
+        .menu-btn {
+            background: transparent; border: none; color: #fff; cursor: pointer;
+            font-size: 1.2rem; width: 40px; height: 40px; border-radius: 8px;
+            transition: 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .menu-btn:hover { background: rgba(255,255,255,0.1); }
+
+        .nav-item { margin: 4px 12px; }
+        .nav-link {
+            display: flex; align-items: center; height: 48px; padding: 0 14px;
+            border-radius: 10px; transition: all 0.2s ease; color: var(--sidebar-text); white-space: nowrap;
+        }
+        .nav-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        
+        /* Active State */
+        .nav-item.active .nav-link { background: var(--primary-color); color: #fff; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+
+        .nav-icon { min-width: 24px; font-size: 1.1rem; text-align: center; }
+        .nav-text { margin-left: 12px; opacity: 0; pointer-events: none; }
+        .sidebar.expanded .nav-text { opacity: 1; pointer-events: auto; transition: opacity 0.2s 0.1s; }
+
+        /* --- 4. MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .page-header {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .page-header h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
+        .breadcrumb { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* Frame Wrapper */
+        .app-frame-wrapper {
+            flex: 1; 
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-container-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Loading */
+        .loading-indicator {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--text-muted);
+            z-index: 10;
+        }
+        .loading-indicator i { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px; }
+
+        /* Mobile Overlay */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 40; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; height: 100%; transform: translateX(-100%); width: 260px; }
+            .sidebar.expanded { transform: translateX(0); }
+            .main-content { width: 100%; padding: 10px; }
+            .sidebar.expanded + .overlay { display: block; }
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
+        
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-industry"></i>
-                    <span class="site-title">MES Unified App</span>
-                </div>
-                <button class="menu-toggle" id="menuToggle">
+                <button class="menu-btn" id="menuToggle" title="Mở/Đóng Menu">
                     <i class="fas fa-bars"></i>
                 </button>
+                <a href="index.html" class="logo-area">MES Unified</a>
             </div>
             
             <nav class="sidebar-nav">
                 <ul class="nav-list">
                     <li class="nav-item">
-                        <a href="index.html" class="nav-link">
+                        <a href="index.html" class="nav-link" title="Dashboard">
                             <i class="nav-icon fas fa-home"></i>
-                            <span class="nav-text">Trang Chủ</span>
+                            <span class="nav-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="batch-uploader.html" class="nav-link">
-                            <i class="nav-icon fas fa-upload"></i>
+                        <a href="batch-uploader.html" class="nav-link" title="Batch Uploader">
+                            <i class="nav-icon fas fa-cloud-upload-alt"></i>
                             <span class="nav-text">Batch Uploader</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="defect.html" class="nav-link">
-                            <i class="nav-icon fas fa-bug"></i>
-                            <span class="nav-text">Defect Management</span>
+                        <a href="defect.html" class="nav-link" title="Defect Management">
+                            <i class="nav-icon fas fa-exclamation-triangle"></i>
+                            <span class="nav-text">Defect Manager</span>
                         </a>
                     </li>
-                    <li class="nav-item active">
-                        <a href="register.html" class="nav-link">
-                            <i class="nav-icon fas fa-edit"></i>
-                            <span class="nav-text">Mes Package</span>
+                    <li class="nav-item active"> <!-- Active tại đây -->
+                        <a href="register.html" class="nav-link" title="MES Package">
+                            <i class="nav-icon fas fa-box-open"></i>
+                            <span class="nav-text">MES Package</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="confirm.html" class="nav-link">
-                            <i class="nav-icon fas fa-check-circle"></i>
-                            <span class="nav-text">Confirm</span>
+                        <a href="confirm.html" class="nav-link" title="Confirm">
+                            <i class="nav-icon fas fa-clipboard-check"></i>
+                            <span class="nav-text">Confirmations</span>
                         </a>
                     </li>
                 </ul>
             </nav>
-            
-            <div class="sidebar-footer">
-                <div class="user-info">
-                    <i class="fas fa-user-circle"></i>
-                    <span>MES System</span>
-                </div>
-            </div>
         </aside>
+
+        <!-- Overlay cho Mobile -->
+        <div class="overlay" id="overlay"></div>
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="content-header">
+            <div class="page-header">
                 <h1>MES Package</h1>
-                <p class="page-description">Quản lý và theo dõi package MES system</p>
+                <div class="breadcrumb">Home / MES Package</div>
             </div>
             
-            <div class="content-body">
-                <div class="app-frame-wrapper">
-                    <div class="loading-indicator" id="loadingRegister">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Đang tải MES Package...</p>
-                    </div>
-                    <iframe 
-                        src="https://xuanan2018.github.io/mes-register-app/" 
-                        class="app-container-frame"
-                        onload="document.getElementById('loadingRegister').style.display='none'"
-                    ></iframe>
+            <!-- Frame Wrapper -->
+            <div class="app-frame-wrapper">
+                <div class="loading-indicator" id="loadingRegister">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                    <p>Đang tải MES Package...</p>
                 </div>
+                <iframe 
+                    src="https://xuanan2018.github.io/mes-register-app/" 
+                    class="app-container-frame"
+                    onload="document.getElementById('loadingRegister').style.display='none'"
+                ></iframe>
             </div>
         </main>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('expanded');
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+    </script>
 </body>
 </html>
