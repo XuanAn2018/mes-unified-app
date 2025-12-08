@@ -6,38 +6,21 @@
     <title>MES Unified Ecosystem</title>
     <!-- Font Awesome Pro/Free -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter (Font chuẩn cho giao diện App hiện đại) -->
+    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. BIẾN MÀU SẮC (THEME SYSTEM) --- */
+        /* --- 1. BIẾN MÀU SẮC --- */
         :root {
-            /* Màu chủ đạo: Xanh dương đậm nhưng dịu (Deep Royal Blue) */
             --primary-color: #3b82f6; 
-            --primary-dark: #2563eb;
-            --primary-light: #eff6ff; /* Nền nhạt cho icon */
-
-            /* Sidebar: Màu tối sang trọng (Dark Slate) */
             --sidebar-bg: #0f172a; 
             --sidebar-text: #94a3b8;
-            --sidebar-active: #ffffff;
-            --sidebar-active-bg: #1e293b;
-
-            /* Nền và chữ */
-            --body-bg: #f1f5f9; /* Xám rất nhạt, dịu mắt */
+            --body-bg: #f1f5f9;
             --text-main: #334155;
             --text-muted: #64748b;
-            
-            /* Card & Shadow */
             --card-bg: #ffffff;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-
-            /* Màu trạng thái */
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
 
         /* --- 2. RESET & BASE --- */
@@ -49,9 +32,9 @@
         /* --- 3. LAYOUT --- */
         .app-container { display: flex; min-height: 100vh; }
 
-        /* SIDEBAR (Thu nhỏ mặc định) */
+        /* SIDEBAR */
         .sidebar {
-            width: 72px; /* Mặc định nhỏ */
+            width: 72px;
             background: var(--sidebar-bg);
             color: var(--sidebar-text);
             display: flex;
@@ -63,14 +46,12 @@
             overflow: hidden;
             box-shadow: 4px 0 24px rgba(0,0,0,0.1);
         }
-
-        /* Khi mở rộng Sidebar */
         .sidebar.expanded { width: 260px; }
 
         /* MAIN CONTENT */
         .main-content {
             flex: 1;
-            margin-left: 72px; /* Tránh sidebar */
+            margin-left: 72px;
             padding: 30px;
             transition: margin-left 0.3s ease;
             width: calc(100% - 72px);
@@ -82,7 +63,7 @@
             height: 70px;
             display: flex;
             align-items: center;
-            justify-content: center; /* Căn giữa khi thu nhỏ */
+            justify-content: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             margin-bottom: 10px;
         }
@@ -92,30 +73,17 @@
         .sidebar.expanded .sidebar-header { justify-content: flex-start; padding-left: 20px; }
 
         .menu-btn {
-            background: transparent;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            font-size: 1.2rem;
-            width: 40px; height: 40px;
-            border-radius: 8px;
-            transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
+            background: transparent; border: none; color: #fff; cursor: pointer;
+            font-size: 1.2rem; width: 40px; height: 40px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
         .menu-btn:hover { background: rgba(255,255,255,0.1); }
 
         .nav-item { position: relative; margin: 4px 12px; }
         .nav-link {
-            display: flex;
-            align-items: center;
-            height: 48px;
-            padding: 0 14px; /* Padding nhỏ để căn icon */
-            border-radius: 10px;
-            transition: all 0.2s ease;
-            color: var(--sidebar-text);
-            white-space: nowrap;
+            display: flex; align-items: center; height: 48px; padding: 0 14px;
+            border-radius: 10px; transition: all 0.2s ease; color: var(--sidebar-text); white-space: nowrap;
         }
-
         .nav-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
         .nav-item.active .nav-link { background: var(--primary-color); color: #fff; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
 
@@ -123,9 +91,9 @@
         .nav-text { margin-left: 12px; opacity: 0; pointer-events: none; }
         .sidebar.expanded .nav-text { opacity: 1; pointer-events: auto; transition: opacity 0.2s 0.1s; }
 
-        /* --- 5. DASHBOARD CONTENT (Trọng tâm) --- */
+        /* --- 5. DASHBOARD GRID --- */
         .page-header { margin-bottom: 30px; }
-        .page-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
+        .page-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--text-main); }
         .page-header p { color: var(--text-muted); margin-top: 5px; }
 
         .dashboard-grid {
@@ -146,137 +114,81 @@
             align-items: center;
             text-align: center;
             position: relative;
-            overflow: hidden;
             height: 100%;
         }
 
-        .app-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--primary-color);
-        }
+        .app-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: var(--primary-color); }
 
-        /* Icon Bubble - Tạo điểm nhấn màu sắc */
         .icon-bubble {
-            width: 64px; height: 64px;
-            border-radius: 50%;
+            width: 64px; height: 64px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            margin-bottom: 16px;
-            font-size: 1.5rem;
-            transition: 0.3s;
+            margin-bottom: 16px; font-size: 1.5rem; transition: 0.3s;
         }
 
-        /* Phân loại màu cho từng chức năng để dễ nhận diện */
-        .card-upload .icon-bubble { background: #e0f2fe; color: #0284c7; } /* Xanh dương - Upload */
-        .card-defect .icon-bubble { background: #fee2e2; color: #dc2626; } /* Đỏ - Lỗi */
-        .card-package .icon-bubble { background: #f3e8ff; color: #9333ea; } /* Tím - Gói */
-        .card-confirm .icon-bubble { background: #dcfce7; color: #16a34a; } /* Xanh lá - OK */
-        .card-tool .icon-bubble { background: #ffedd5; color: #ea580c; } /* Cam - Tool */
+        /* --- MÀU SẮC ICON --- */
+        .card-upload .icon-bubble { background: #e0f2fe; color: #0284c7; } /* Blue */
+        .card-defect .icon-bubble { background: #fee2e2; color: #dc2626; } /* Red */
+        .card-package .icon-bubble { background: #f3e8ff; color: #9333ea; } /* Purple */
+        .card-confirm .icon-bubble { background: #dcfce7; color: #16a34a; } /* Green */
+        .card-tool .icon-bubble { background: #ffedd5; color: #ea580c; } /* Orange */
         
-        /* MỚI: Màu cho Hourly Target */
-        .card-target .icon-bubble { background: #ccfbf1; color: #0f766e; } /* Xanh Ngọc - Target */
+        /* MỚI: Màu Teal cho Target */
+        .card-target .icon-bubble { background: #ccfbf1; color: #0f766e; } 
 
         .app-card:hover .icon-bubble { transform: scale(1.1); }
-
         .app-card h3 { font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
-        .app-status { 
-            font-size: 0.75rem; 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            background: #f1f5f9; 
-            color: var(--text-muted);
-            font-weight: 500;
-        }
+        .app-status { font-size: 0.75rem; padding: 4px 12px; border-radius: 20px; background: #f1f5f9; color: var(--text-muted); font-weight: 500; }
         
-        /* Stats Section */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-top: 40px;
-        }
-        .stat-item {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            box-shadow: var(--shadow-sm);
-        }
-        .stat-icon { font-size: 2rem; color: #cbd5e1; }
-        .stat-info h4 { font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
+        /* Stats */
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+        .stat-item { background: white; padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 20px; box-shadow: var(--shadow-sm); }
+        .stat-icon { font-size: 2rem; }
+        .stat-info h4 { font-size: 1.5rem; font-weight: 700; margin: 0; }
         .stat-info span { color: var(--text-muted); font-size: 0.9rem; }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); width: 260px; }
-            .sidebar.expanded { transform: translateX(0); } /* Mobile: Expanded là trượt ra */
+            .sidebar.expanded { transform: translateX(0); }
             .main-content { margin-left: 0; width: 100%; padding: 20px; }
-            .sidebar.expanded ~ .main-content { margin-left: 0; } /* Overlay menu */
+            .sidebar.expanded ~ .main-content { margin-left: 0; }
             .stats-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar: Bỏ class 'expanded' để mặc định thu nhỏ -->
+        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <!-- Nút toggle menu -->
-                <button class="menu-btn" id="menuToggle" title="Mở rộng menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <!-- Logo & Text -->
-                <a href="index.html" class="logo-area">
-                    MES Unified
-                </a>
+                <button class="menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <a href="index.html" class="logo-area">MES Unified</a>
             </div>
             
             <nav class="sidebar-nav">
                 <ul class="nav-list">
-                    <!-- Home -->
                     <li class="nav-item active">
-                        <a href="index.html" class="nav-link" title="Trang Chủ">
-                            <i class="nav-icon fas fa-home"></i>
-                            <span class="nav-text">Dashboard</span>
+                        <a href="index.html" class="nav-link">
+                            <i class="nav-icon fas fa-home"></i><span class="nav-text">Dashboard</span>
                         </a>
                     </li>
-                    <!-- Batch Uploader -->
                     <li class="nav-item">
-                        <a href="batch-uploader.html" class="nav-link" title="Batch Uploader">
-                            <i class="nav-icon fas fa-cloud-upload-alt"></i>
-                            <span class="nav-text">Batch Uploader</span>
+                        <a href="batch-uploader.html" class="nav-link">
+                            <i class="nav-icon fas fa-cloud-upload-alt"></i><span class="nav-text">Batch Uploader</span>
                         </a>
                     </li>
-                    
-                    <!-- MỚI: Hourly Target -->
                     <li class="nav-item">
-                        <a href="https://input-hourly-target.chiscoong-cloudflare-com.workers.dev/" target="_blank" class="nav-link" title="Nhập Target Giờ">
-                            <i class="nav-icon fas fa-bullseye"></i>
-                            <span class="nav-text">Hourly Target</span>
+                        <a href="defect.html" class="nav-link">
+                            <i class="nav-icon fas fa-exclamation-triangle"></i><span class="nav-text">Defect Manager</span>
                         </a>
                     </li>
-
-                    <!-- Defect -->
                     <li class="nav-item">
-                        <a href="defect.html" class="nav-link" title="Quản lý Lỗi">
-                            <i class="nav-icon fas fa-exclamation-triangle"></i>
-                            <span class="nav-text">Defect Manager</span>
+                        <a href="register.html" class="nav-link">
+                            <i class="nav-icon fas fa-box-open"></i><span class="nav-text">MES Package</span>
                         </a>
                     </li>
-                    <!-- MES Package -->
                     <li class="nav-item">
-                        <a href="register.html" class="nav-link" title="Đóng gói MES">
-                            <i class="nav-icon fas fa-box-open"></i>
-                            <span class="nav-text">MES Package</span>
-                        </a>
-                    </li>
-                    <!-- Confirm -->
-                    <li class="nav-item">
-                        <a href="confirm.html" class="nav-link" title="Xác nhận">
-                            <i class="nav-icon fas fa-clipboard-check"></i>
-                            <span class="nav-text">Confirmations</span>
+                        <a href="confirm.html" class="nav-link">
+                            <i class="nav-icon fas fa-clipboard-check"></i><span class="nav-text">Confirmations</span>
                         </a>
                     </li>
                 </ul>
@@ -290,9 +202,8 @@
                 <p>Chọn phân hệ bên dưới để bắt đầu làm việc</p>
             </div>
             
-            <!-- Grid Ứng dụng -->
             <div class="dashboard-grid">
-                <!-- Hourly Target (MỚI - Ưu tiên hiển thị) -->
+                <!-- MỚI: Hourly Target (Thêm vào đây) -->
                 <a href="https://input-hourly-target.chiscoong-cloudflare-com.workers.dev/" target="_blank" class="app-card card-target">
                     <div class="icon-bubble">
                         <i class="fas fa-bullseye"></i>
@@ -301,94 +212,6 @@
                     <div class="app-status">Production Input</div>
                 </a>
 
-                <!-- Batch Uploader (Blue) -->
+                <!-- Batch Uploader -->
                 <a href="batch-uploader.html" class="app-card card-upload">
-                    <div class="icon-bubble">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <h3>Batch Uploader</h3>
-                    <div class="app-status">Sẵn sàng</div>
-                </a>
-
-                <!-- Defect Management (Red - Cảnh báo) -->
-                <a href="defect.html" class="app-card card-defect">
-                    <div class="icon-bubble">
-                        <i class="fas fa-bug"></i>
-                    </div>
-                    <h3>Defect Management</h3>
-                    <div class="app-status">Đang hoạt động</div>
-                </a>
-
-                <!-- MES Package (Purple) -->
-                <a href="register.html" class="app-card card-package">
-                    <div class="icon-bubble">
-                        <i class="fas fa-box"></i>
-                    </div>
-                    <h3>MES Package</h3>
-                    <div class="app-status">Sẵn sàng</div>
-                </a>
-
-                <!-- Confirm (Green - An toàn) -->
-                <a href="confirm.html" class="app-card card-confirm">
-                    <div class="icon-bubble">
-                        <i class="fas fa-check-double"></i>
-                    </div>
-                    <h3>Confirm</h3>
-                    <div class="app-status">Sẵn sàng</div>
-                </a>
-
-                <!-- External Tools (Orange) -->
-                <a href="https://nnct2023.github.io/Addin-NXA/" target="_blank" class="app-card card-tool">
-                    <div class="icon-bubble">
-                        <i class="fas fa-puzzle-piece"></i>
-                    </div>
-                    <h3>Addin NXA</h3>
-                    <div class="app-status">Extension</div>
-                </a>
-
-                <a href="https://xuanan2018.github.io/google-drive-converter/" target="_blank" class="app-card card-tool">
-                    <div class="icon-bubble">
-                        <i class="fas fa-sync"></i>
-                    </div>
-                    <h3>Drive Converter</h3>
-                    <div class="app-status">Utility</div>
-                </a>
-            </div>
-
-            <!-- Quick Stats -->
-            <div class="stats-row">
-                <div class="stat-item">
-                    <i class="fas fa-server stat-icon" style="color: #3b82f6;"></i>
-                    <div class="stat-info">
-                        <h4>7</h4>
-                        <span>Modules Active</span>
-                    </div>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-wifi stat-icon" style="color: #10b981;"></i>
-                    <div class="stat-info">
-                        <h4>Online</h4>
-                        <span>System Status</span>
-                    </div>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-user-shield stat-icon" style="color: #64748b;"></i>
-                    <div class="stat-info">
-                        <h4>Admin</h4>
-                        <span>Current Session</span>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('expanded');
-        });
-    </script>
-</body>
-</html>
+                    <div class="icon-bubble"><i class="fas fa-cloud-up
