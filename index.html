@@ -42,7 +42,7 @@
 
         /* --- 2. RESET & BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: --body-bg; color: var(--text-main); background: var(--body-bg); min-height: 100vh; }
+        body { background-color: var(--body-bg); color: var(--text-main); min-height: 100vh; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
 
@@ -172,6 +172,9 @@
         .card-package .icon-bubble { background: #f3e8ff; color: #9333ea; } /* Tím - Gói */
         .card-confirm .icon-bubble { background: #dcfce7; color: #16a34a; } /* Xanh lá - OK */
         .card-tool .icon-bubble { background: #ffedd5; color: #ea580c; } /* Cam - Tool */
+        
+        /* MỚI: Màu cho Hourly Target */
+        .card-target .icon-bubble { background: #ccfbf1; color: #0f766e; } /* Xanh Ngọc - Target */
 
         .app-card:hover .icon-bubble { transform: scale(1.1); }
 
@@ -246,6 +249,15 @@
                             <span class="nav-text">Batch Uploader</span>
                         </a>
                     </li>
+                    
+                    <!-- MỚI: Hourly Target -->
+                    <li class="nav-item">
+                        <a href="https://input-hourly-target.chiscoong-cloudflare-com.workers.dev/" target="_blank" class="nav-link" title="Nhập Target Giờ">
+                            <i class="nav-icon fas fa-bullseye"></i>
+                            <span class="nav-text">Hourly Target</span>
+                        </a>
+                    </li>
+
                     <!-- Defect -->
                     <li class="nav-item">
                         <a href="defect.html" class="nav-link" title="Quản lý Lỗi">
@@ -280,6 +292,15 @@
             
             <!-- Grid Ứng dụng -->
             <div class="dashboard-grid">
+                <!-- Hourly Target (MỚI - Ưu tiên hiển thị) -->
+                <a href="https://input-hourly-target.chiscoong-cloudflare-com.workers.dev/" target="_blank" class="app-card card-target">
+                    <div class="icon-bubble">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Hourly Target</h3>
+                    <div class="app-status">Production Input</div>
+                </a>
+
                 <!-- Batch Uploader (Blue) -->
                 <a href="batch-uploader.html" class="app-card card-upload">
                     <div class="icon-bubble">
@@ -339,7 +360,7 @@
                 <div class="stat-item">
                     <i class="fas fa-server stat-icon" style="color: #3b82f6;"></i>
                     <div class="stat-info">
-                        <h4>6</h4>
+                        <h4>7</h4>
                         <span>Modules Active</span>
                     </div>
                 </div>
