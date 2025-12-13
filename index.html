@@ -131,9 +131,10 @@
         .card-package .icon-bubble { background: #f3e8ff; color: #9333ea; } /* Purple */
         .card-confirm .icon-bubble { background: #dcfce7; color: #16a34a; } /* Green */
         .card-tool .icon-bubble { background: #ffedd5; color: #ea580c; } /* Orange */
+        .card-target .icon-bubble { background: #ccfbf1; color: #0f766e; } /* Teal */
         
-        /* MỚI: Màu Teal cho Target */
-        .card-target .icon-bubble { background: #ccfbf1; color: #0f766e; } 
+        /* [MỚI] Màu cho Scanner Pro - Cyan đậm */
+        .card-scanner .icon-bubble { background: #0891b2; color: #ffffff; box-shadow: 0 4px 10px rgba(8, 145, 178, 0.3); }
 
         .app-card:hover .icon-bubble { transform: scale(1.1); }
         .app-card h3 { font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
@@ -141,7 +142,16 @@
         
         /* Stats */
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
-        .stat-item { background: white; padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 20px; box-shadow: var(--shadow-sm); }
+        
+        /* Sửa đổi stat-item để hỗ trợ thẻ a */
+        .stat-item { 
+            background: white; padding: 20px; border-radius: 12px; 
+            display: flex; align-items: center; gap: 20px; box-shadow: var(--shadow-sm); 
+            transition: transform 0.2s;
+        }
+        /* Hiệu ứng hover cho link Admin */
+        a.stat-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); cursor: pointer; }
+
         .stat-icon { font-size: 2rem; }
         .stat-info h4 { font-size: 1.5rem; font-weight: 700; margin: 0; }
         .stat-info span { color: var(--text-muted); font-size: 0.9rem; }
@@ -172,6 +182,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="mes-scanner.html" class="nav-link">
+                            <i class="nav-icon fas fa-satellite-dish"></i><span class="nav-text">IoT Scanner</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="batch-uploader.html" class="nav-link">
                             <i class="nav-icon fas fa-cloud-upload-alt"></i><span class="nav-text">Batch Uploader</span>
                         </a>
@@ -186,11 +201,6 @@
                             <i class="nav-icon fas fa-box-open"></i><span class="nav-text">MES Package</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="confirm.html" class="nav-link">
-                            <i class="nav-icon fas fa-clipboard-check"></i><span class="nav-text">Confirmations</span>
-                        </a>
-                    </li>
                 </ul>
             </nav>
         </aside>
@@ -203,7 +213,17 @@
             </div>
             
             <div class="dashboard-grid">
-                <!-- MỚI: Hourly Target (Thêm vào đây) -->
+                
+                <!-- [MỚI] MES SCANNER PRO -->
+                <a href="mes-scanner.html" class="app-card card-scanner">
+                    <div class="icon-bubble">
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    <h3>MES Scanner Pro</h3>
+                    <div class="app-status">IoT & Machine</div>
+                </a>
+
+                <!-- Hourly Target -->
                 <a href="https://input-hourly-target.chiscoong-cloudflare-com.workers.dev/" target="_blank" class="app-card card-target">
                     <div class="icon-bubble">
                         <i class="fas fa-bullseye"></i>
@@ -258,7 +278,7 @@
                 <div class="stat-item">
                     <i class="fas fa-server stat-icon" style="color: #3b82f6;"></i>
                     <div class="stat-info">
-                        <h4>7</h4>
+                        <h4>8</h4>
                         <span>Modules Active</span>
                     </div>
                 </div>
@@ -269,13 +289,15 @@
                         <span>System Status</span>
                     </div>
                 </div>
-                <div class="stat-item">
+                
+                <!-- [MỚI] ADMIN LINK -->
+                <a href="https://linktr.ee/chiscoong" target="_blank" class="stat-item" title="Liên hệ Admin">
                     <i class="fas fa-user-shield stat-icon" style="color: #64748b;"></i>
                     <div class="stat-info">
-                        <h4>Admin</h4>
-                        <span>Current Session</span>
+                        <h4>Chí Công</h4>
+                        <span style="color: #3b82f6; font-size: 0.8rem;">Click to Bio <i class="fas fa-external-link-alt"></i></span>
                     </div>
-                </div>
+                </a>
             </div>
         </main>
     </div>
