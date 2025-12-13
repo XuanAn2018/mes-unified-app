@@ -133,8 +133,8 @@
         .card-tool .icon-bubble { background: #ffedd5; color: #ea580c; } /* Orange */
         .card-target .icon-bubble { background: #ccfbf1; color: #0f766e; } /* Teal */
         
-        /* [MỚI] Màu cho Scanner Pro - Cyan đậm */
-        .card-scanner .icon-bubble { background: #0891b2; color: #ffffff; box-shadow: 0 4px 10px rgba(8, 145, 178, 0.3); }
+        /* [MỚI] Màu cho Remove Machine - Cyan đậm để nổi bật */
+        .card-remove .icon-bubble { background: #0891b2; color: #ffffff; box-shadow: 0 4px 10px rgba(8, 145, 178, 0.3); }
 
         .app-card:hover .icon-bubble { transform: scale(1.1); }
         .app-card h3 { font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
@@ -143,13 +143,13 @@
         /* Stats */
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
         
-        /* Sửa đổi stat-item để hỗ trợ thẻ a */
+        /* Cập nhật để stat-item hỗ trợ thẻ 'a' khi hover */
         .stat-item { 
             background: white; padding: 20px; border-radius: 12px; 
             display: flex; align-items: center; gap: 20px; box-shadow: var(--shadow-sm); 
             transition: transform 0.2s;
         }
-        /* Hiệu ứng hover cho link Admin */
+        /* Hiệu ứng khi admin link là thẻ a */
         a.stat-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); cursor: pointer; }
 
         .stat-icon { font-size: 2rem; }
@@ -171,7 +171,7 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <button class="menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
-                <a href="index.html" class="logo-area">MES Unified</a>
+                <a href="index.html" class="logo-area">MES System</a>
             </div>
             
             <nav class="sidebar-nav">
@@ -182,13 +182,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="mes-scanner.html" class="nav-link">
-                            <i class="nav-icon fas fa-satellite-dish"></i><span class="nav-text">IoT Scanner</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a href="batch-uploader.html" class="nav-link">
-                            <i class="nav-icon fas fa-cloud-upload-alt"></i><span class="nav-text">Batch Uploader</span>
+                            <i class="nav-icon fas fa-cloud-upload-alt"></i><span class="nav-text">IoT Scanner Pro</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -198,7 +193,12 @@
                     </li>
                     <li class="nav-item">
                         <a href="register.html" class="nav-link">
-                            <i class="nav-icon fas fa-box-open"></i><span class="nav-text">MES Package</span>
+                            <i class="nav-icon fas fa-box-open"></i><span class="nav-text">Search PackageGroup</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="confirm.html" class="nav-link">
+                            <i class="nav-icon fas fa-clipboard-check"></i><span class="nav-text">Confirmations</span>
                         </a>
                     </li>
                 </ul>
@@ -213,64 +213,63 @@
             </div>
             
             <div class="dashboard-grid">
-                
-                <!-- [MỚI] MES SCANNER PRO -->
-                <a href="mes-scanner.html" class="app-card card-scanner">
-                    <div class="icon-bubble">
-                        <i class="fas fa-satellite-dish"></i>
-                    </div>
-                    <h3>MES Scanner Pro</h3>
-                    <div class="app-status">IoT & Machine</div>
-                </a>
-
                 <!-- Hourly Target -->
                 <a href="https://input-hourly-target.chiscoong-cloudflare-com.workers.dev/" target="_blank" class="app-card card-target">
                     <div class="icon-bubble">
                         <i class="fas fa-bullseye"></i>
                     </div>
-                    <h3>Hourly Target</h3>
-                    <div class="app-status">Production Input</div>
+                    <h3>Input Hourly Target</h3>
+                    <div class="app-status">Nhập dữ liệu mục tiêu hàng giờ</div>
                 </a>
 
                 <!-- Batch Uploader -->
                 <a href="batch-uploader.html" class="app-card card-upload">
                     <div class="icon-bubble"><i class="fas fa-cloud-upload-alt"></i></div>
-                    <h3>Batch Uploader</h3>
-                    <div class="app-status">Sẵn sàng</div>
+                    <h3>IoT Scanner Pro</h3>
+                    <div class="app-status">Gửi hàng loạt IoT cho gói sản xuất</div>
                 </a>
 
                 <!-- Defect Management -->
                 <a href="defect.html" class="app-card card-defect">
                     <div class="icon-bubble"><i class="fas fa-bug"></i></div>
                     <h3>Defect Management</h3>
-                    <div class="app-status">Đang hoạt động</div>
+                    <div class="app-status">Gửi ảnh và mô tả lỗi</div>
                 </a>
 
                 <!-- MES Package -->
                 <a href="register.html" class="app-card card-package">
                     <div class="icon-bubble"><i class="fas fa-box"></i></div>
-                    <h3>MES Package</h3>
-                    <div class="app-status">Sẵn sàng</div>
+                    <h3>Search PackageGroup</h3>
+                    <div class="app-status">Tìm PackageGroup trong 6 tháng</div>
                 </a>
 
                 <!-- Confirm -->
                 <a href="confirm.html" class="app-card card-confirm">
                     <div class="icon-bubble"><i class="fas fa-check-double"></i></div>
                     <h3>Confirm</h3>
-                    <div class="app-status">Sẵn sàng</div>
+                    <div class="app-status">Đăng kí và xác nhận gói sản xuất</div>
+                </a>
+
+                <!-- [MỚI] REMOVE MACHINE - Chèn vào đây -->
+                <a href="mes-scanner-pro.html" target="_blank" class="app-card card-remove">
+                    <div class="icon-bubble">
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    <h3>Remove machine</h3>
+                    <div class="app-status">Xóa các IoT đã scanner hàng loạt</div>
                 </a>
 
                 <!-- External Tools -->
                 <a href="https://nnct2023.github.io/Addin-NXA/" target="_blank" class="app-card card-tool">
                     <div class="icon-bubble"><i class="fas fa-puzzle-piece"></i></div>
                     <h3>Addin NXA</h3>
-                    <div class="app-status">Extension</div>
+                    <div class="app-status">Tiện ích AI đa nền tảng dành cho Excel</div>
                 </a>
 
                 <a href="https://xuanan2018.github.io/google-drive-converter/" target="_blank" class="app-card card-tool">
                     <div class="icon-bubble"><i class="fas fa-sync"></i></div>
                     <h3>Drive Converter</h3>
-                    <div class="app-status">Utility</div>
+                    <div class="app-status">Chuyển đổi thành liên kết tải xuống trực tiếp</div>
                 </a>
             </div>
 
@@ -290,8 +289,8 @@
                     </div>
                 </div>
                 
-                <!-- [MỚI] ADMIN LINK -->
-                <a href="https://linktr.ee/chiscoong" target="_blank" class="stat-item" title="Liên hệ Admin">
+                <!-- [CẬP NHẬT] ADMIN LINK -->
+                <a href="https://linktr.ee/chiscoong" target="_blank" class="stat-item" title="Click to visit Bio">
                     <i class="fas fa-user-shield stat-icon" style="color: #64748b;"></i>
                     <div class="stat-info">
                         <h4>Chí Công</h4>
