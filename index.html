@@ -3,165 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MES Unified Ecosystem</title>
-    <!-- Font Awesome Pro/Free -->
+    <title>MES Unified Ecosystem | Dashboard</title>
+    <!-- Font Awesome 6 Pro/Free -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Plus Jakarta Sans (Phông chữ hiện đại hơn Inter cho Dashboard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. BIẾN MÀU SẮC --- */
+        /* --- 1. DESIGN TOKENS --- */
         :root {
-            --primary-color: #3b82f6; 
-            --sidebar-bg: #0f172a; 
-            --sidebar-text: #94a3b8;
-            --body-bg: #f1f5f9;
-            --text-main: #334155;
-            --text-muted: #64748b;
-            --card-bg: #ffffff;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.1);
+            /* Palette chuyên nghiệp */
+            --primary: #2563eb;          /* Xanh đậm tin cậy */
+            --primary-light: #eff6ff;
+            --bg-body: #f3f4f6;          /* Xám nhạt nền nã */
+            --bg-sidebar: #0f172a;       /* Slate đậm sang trọng */
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            
+            /* Card Colors (Gradient nhẹ) */
+            --color-target: #0ea5e9;     /* Sky */
+            --color-scanner: #3b82f6;    /* Blue */
+            --color-defect: #ef4444;     /* Red */
+            --color-search: #8b5cf6;     /* Violet (Mới) */
+            --color-remove: #f59e0b;     /* Amber */
+            --color-package: #10b981;    /* Emerald */
+            --color-confirm: #14b8a6;    /* Teal */
+            --color-drive: #ec4899;      /* Pink */
+            --color-addin: #6366f1;      /* Indigo */
+
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 16px;
         }
 
-        /* --- 2. RESET & BASE --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--body-bg); color: var(--text-main); min-height: 100vh; }
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
-
+        /* --- 2. BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; display: block; }
+        
         /* --- 3. LAYOUT --- */
         .app-container { display: flex; min-height: 100vh; }
 
-        /* SIDEBAR */
+        /* SIDEBAR (Đã tinh chỉnh lại mượt hơn) */
         .sidebar {
-            width: 72px;
-            background: var(--sidebar-bg);
-            color: var(--sidebar-text);
+            width: 80px;
+            background: var(--bg-sidebar);
+            color: #94a3b8;
             display: flex;
             flex-direction: column;
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: fixed;
-            height: 100%;
-            z-index: 50;
+            height: 100vh;
+            z-index: 100;
+            transition: width 0.4s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: 4px 0 24px rgba(0,0,0,0.05);
             overflow: hidden;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.1);
         }
-        .sidebar.expanded { width: 260px; }
-
-        /* MAIN CONTENT */
-        .main-content {
-            flex: 1;
-            margin-left: 72px;
-            padding: 30px;
-            transition: margin-left 0.3s ease;
-            width: calc(100% - 72px);
-        }
-        .sidebar.expanded ~ .main-content { margin-left: 260px; width: calc(100% - 260px); }
-
-        /* --- 4. SIDEBAR COMPONENTS --- */
+        .sidebar.expanded { width: 280px; }
+        
+        /* Header Logo Sidebar */
         .sidebar-header {
-            height: 70px;
+            height: 80px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            margin-bottom: 10px;
+            padding: 0 24px;
+            margin-bottom: 20px;
         }
-        
-        .logo-area { display: none; opacity: 0; white-space: nowrap; margin-left: 15px; font-weight: 600; font-size: 1.2rem; color: #fff; }
-        .sidebar.expanded .logo-area { display: block; opacity: 1; transition: opacity 0.3s; }
-        .sidebar.expanded .sidebar-header { justify-content: flex-start; padding-left: 20px; }
-
         .menu-btn {
-            background: transparent; border: none; color: #fff; cursor: pointer;
-            font-size: 1.2rem; width: 40px; height: 40px; border-radius: 8px;
+            background: rgba(255,255,255,0.05); border: none; color: #fff; cursor: pointer;
+            width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
-        .menu-btn:hover { background: rgba(255,255,255,0.1); }
-
-        .nav-item { position: relative; margin: 4px 12px; }
-        .nav-link {
-            display: flex; align-items: center; height: 48px; padding: 0 14px;
-            border-radius: 10px; transition: all 0.2s ease; color: var(--sidebar-text); white-space: nowrap;
+        .menu-btn:hover { background: var(--primary); }
+        
+        .brand {
+            margin-left: 16px; font-weight: 700; font-size: 1.25rem; color: #fff;
+            white-space: nowrap; opacity: 0; transition: opacity 0.2s;
         }
-        .nav-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .nav-item.active .nav-link { background: var(--primary-color); color: #fff; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .sidebar.expanded .brand { opacity: 1; transition-delay: 0.1s; }
 
+        /* Nav Items */
+        .nav-list { padding: 0 12px; }
+        .nav-item { margin-bottom: 8px; }
+        .nav-link {
+            display: flex; align-items: center; height: 50px; padding: 0 14px;
+            border-radius: 12px; color: #94a3b8; transition: all 0.2s; white-space: nowrap;
+        }
+        .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; transform: translateX(4px); }
+        .nav-item.active .nav-link { 
+            background: linear-gradient(135deg, var(--primary), #1d4ed8); 
+            color: #fff; 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+        
         .nav-icon { min-width: 24px; font-size: 1.1rem; text-align: center; }
-        .nav-text { margin-left: 12px; opacity: 0; pointer-events: none; }
-        .sidebar.expanded .nav-text { opacity: 1; pointer-events: auto; transition: opacity 0.2s 0.1s; }
+        .nav-text { margin-left: 16px; font-weight: 500; opacity: 0; pointer-events: none; }
+        .sidebar.expanded .nav-text { opacity: 1; pointer-events: auto; transition: opacity 0.3s 0.1s; }
 
-        /* --- 5. DASHBOARD GRID --- */
-        .page-header { margin-bottom: 30px; }
-        .page-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--text-main); }
-        .page-header p { color: var(--text-muted); margin-top: 5px; }
+        /* MAIN AREA */
+        .main-content {
+            flex: 1; margin-left: 80px; padding: 40px;
+            transition: margin-left 0.4s cubic-bezier(0.2, 0, 0, 1);
+            width: calc(100% - 80px);
+        }
+        .sidebar.expanded ~ .main-content { margin-left: 280px; width: calc(100% - 280px); }
 
+        /* --- 4. HEADER CONTENT --- */
+        .top-bar {
+            margin-bottom: 40px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+        .welcome-text h1 { font-size: 2rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.02em; }
+        .welcome-text p { color: var(--text-sub); margin-top: 8px; font-size: 1rem; }
+        
+        .date-badge {
+            background: #fff; padding: 8px 16px; border-radius: 50px;
+            font-size: 0.9rem; font-weight: 600; color: var(--text-main);
+            box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 8px;
+        }
+
+        /* --- 5. GRID SYSTEM (REDESIGNED) --- */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 24px;
         }
 
+        /* MODERN CARD DESIGN */
         .app-card {
-            background: var(--card-bg);
-            border-radius: 16px;
+            background: #fff;
+            border-radius: var(--radius);
             padding: 24px;
-            border: 1px solid rgba(255,255,255,0.5);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-card);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
+            overflow: hidden;
             height: 100%;
         }
 
-        .app-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: var(--primary-color); }
+        /* Hover Effect: Lift Up + Border Glow */
+        .app-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
 
-        .icon-bubble {
-            width: 64px; height: 64px; border-radius: 50%;
+        /* Top colored line for each card */
+        .app-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--card-color, #ccc); opacity: 0; transition: 0.3s;
+        }
+        .app-card:hover::before { opacity: 1; }
+
+        .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+        
+        .icon-box {
+            width: 56px; height: 56px; border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
-            margin-bottom: 16px; font-size: 1.5rem; transition: 0.3s;
+            font-size: 1.5rem; color: #fff;
+            background: var(--card-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
         }
+        .app-card:hover .icon-box { transform: rotate(-5deg) scale(1.05); }
 
-        /* --- MÀU SẮC ICON --- */
-        .card-upload .icon-bubble { background: #e0f2fe; color: #0284c7; } /* Blue */
-        .card-defect .icon-bubble { background: #fee2e2; color: #dc2626; } /* Red */
-        .card-package .icon-bubble { background: #f3e8ff; color: #9333ea; } /* Purple */
-        .card-confirm .icon-bubble { background: #dcfce7; color: #16a34a; } /* Green */
-        .card-tool .icon-bubble { background: #ffedd5; color: #ea580c; } /* Orange */
-        .card-target .icon-bubble { background: #ccfbf1; color: #0f766e; } /* Teal */
-        
-        /* [MỚI] Màu cho Remove Machine - Cyan đậm để nổi bật */
-        .card-remove .icon-bubble { background: #0891b2; color: #ffffff; box-shadow: 0 4px 10px rgba(8, 145, 178, 0.3); }
-
-        .app-card:hover .icon-bubble { transform: scale(1.1); }
-        .app-card h3 { font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
-        .app-status { font-size: 0.75rem; padding: 4px 12px; border-radius: 20px; background: #f1f5f9; color: var(--text-muted); font-weight: 500; }
-        
-        /* Stats */
-        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
-        
-        /* Cập nhật để stat-item hỗ trợ thẻ 'a' khi hover */
-        .stat-item { 
-            background: white; padding: 20px; border-radius: 12px; 
-            display: flex; align-items: center; gap: 20px; box-shadow: var(--shadow-sm); 
-            transition: transform 0.2s;
+        .card-arrow {
+            color: #cbd5e1; font-size: 1.2rem; transition: 0.3s;
         }
-        /* Hiệu ứng khi admin link là thẻ a */
-        a.stat-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); cursor: pointer; }
+        .app-card:hover .card-arrow { color: var(--card-color); transform: translateX(5px); }
 
-        .stat-icon { font-size: 2rem; }
-        .stat-info h4 { font-size: 1.5rem; font-weight: 700; margin: 0; }
-        .stat-info span { color: var(--text-muted); font-size: 0.9rem; }
+        .card-content h3 { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
+        .card-content p { font-size: 0.9rem; color: var(--text-sub); line-height: 1.5; }
 
+        /* --- 6. STATS / FOOTER --- */
+        .stats-section {
+            margin-top: 50px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+        }
+        .stat-card {
+            background: #fff; padding: 24px; border-radius: var(--radius);
+            display: flex; align-items: center; gap: 20px;
+            border: 1px solid rgba(0,0,0,0.04); box-shadow: var(--shadow-card);
+            transition: 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+        
+        .stat-icon { font-size: 2rem; opacity: 0.8; }
+        .stat-details h4 { font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 2px; }
+        .stat-details span { font-size: 0.85rem; color: var(--text-sub); font-weight: 500; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 992px) {
+            .stats-section { grid-template-columns: 1fr; }
+        }
         @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); width: 260px; }
-            .sidebar.expanded { transform: translateX(0); }
-            .main-content { margin-left: 0; width: 100%; padding: 20px; }
-            .sidebar.expanded ~ .main-content { margin-left: 0; }
-            .stats-row { grid-template-columns: 1fr; }
+            .sidebar { width: 0; transform: translateX(-100%); }
+            .sidebar.expanded { width: 280px; transform: translateX(0); }
+            .main-content { margin-left: 0 !important; width: 100% !important; padding: 20px; }
+            .top-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .menu-btn { background: #334155; color: white; position: fixed; top: 20px; left: 20px; z-index: 110; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         }
     </style>
 </head>
@@ -171,130 +212,168 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <button class="menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
-                <a href="index.html" class="logo-area">MES System</a>
+                <span class="brand">MES Ecosystem</span>
             </div>
             
-            <nav class="sidebar-nav">
-                <ul class="nav-list">
-                    <li class="nav-item active">
-                        <a href="index.html" class="nav-link">
-                            <i class="nav-icon fas fa-home"></i><span class="nav-text">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="batch-uploader.html" class="nav-link">
-                            <i class="nav-icon fas fa-cloud-upload-alt"></i><span class="nav-text">IoT Scanner Pro</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="defect.html" class="nav-link">
-                            <i class="nav-icon fas fa-exclamation-triangle"></i><span class="nav-text">Defect Manager</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="register.html" class="nav-link">
-                            <i class="nav-icon fas fa-box-open"></i><span class="nav-text">Search PackageGroup</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="confirm.html" class="nav-link">
-                            <i class="nav-icon fas fa-clipboard-check"></i><span class="nav-text">Confirmations</span>
-                        </a>
-                    </li>
-                </ul>
+            <nav class="nav-list">
+                <li class="nav-item active">
+                    <a href="index.html" class="nav-link">
+                        <i class="nav-icon fas fa-grid-2"></i><span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <!-- Sidebar links shortcut -->
+                <li class="nav-item"><a href="batch-uploader.html" class="nav-link"><i class="nav-icon fas fa-cloud-upload"></i><span class="nav-text">IoT Scanner</span></a></li>
+                <li class="nav-item"><a href="defect.html" class="nav-link"><i class="nav-icon fas fa-triangle-exclamation"></i><span class="nav-text">Defect Manager</span></a></li>
+                <li class="nav-item"><a href="register.html" class="nav-link"><i class="nav-icon fas fa-magnifying-glass"></i><span class="nav-text">Search Package</span></a></li>
             </nav>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="page-header">
-                <h1>Hệ thống Quản lý Sản xuất (MES)</h1>
-                <p>Chọn phân hệ bên dưới để bắt đầu làm việc</p>
+            <div class="top-bar">
+                <div class="welcome-text">
+                    <h1>Sản xuất thông minh</h1>
+                    <p>Hệ thống quản lý và vận hành sản xuất tập trung (MES)</p>
+                </div>
+                <div class="date-badge">
+                    <i class="far fa-calendar-alt" style="color: var(--primary)"></i>
+                    <span id="currentDate">Loading...</span>
+                </div>
             </div>
             
             <div class="dashboard-grid">
-                <!-- Hourly Target -->
-                <a href="https://input-hourly-target.pages.dev/" target="_blank" class="app-card card-target">
-                    <div class="icon-bubble">
-                        <i class="fas fa-bullseye"></i>
+                
+                <!-- 1. HOURLY TARGET -->
+                <a href="https://input-hourly-target.pages.dev/" target="_blank" class="app-card" style="--card-color: var(--color-target)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-bullseye"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
                     </div>
-                    <h3>Input Hourly Target</h3>
-                    <div class="app-status">Nhập dữ liệu mục tiêu hàng giờ</div>
-                </a>
-
-                <!-- Batch Uploader -->
-                <a href="batch-uploader.html" class="app-card card-upload">
-                    <div class="icon-bubble"><i class="fas fa-cloud-upload-alt"></i></div>
-                    <h3>IoT Scanner Pro</h3>
-                    <div class="app-status">Gửi hàng loạt IoT cho gói sản xuất</div>
-                </a>
-
-                <!-- Defect Management -->
-                <a href="defect.html" class="app-card card-defect">
-                    <div class="icon-bubble"><i class="fas fa-bug"></i></div>
-                    <h3>Defect Management</h3>
-                    <div class="app-status">Gửi ảnh và mô tả lỗi</div>
-                </a>
-
-                <!-- MES Package -->
-                <a href="register.html" class="app-card card-package">
-                    <div class="icon-bubble"><i class="fas fa-box"></i></div>
-                    <h3>Search PackageGroup</h3>
-                    <div class="app-status">Tìm PackageGroup trong 6 tháng</div>
-                </a>
-
-                <!-- Confirm -->
-                <a href="confirm.html" class="app-card card-confirm">
-                    <div class="icon-bubble"><i class="fas fa-check-double"></i></div>
-                    <h3>Confirm</h3>
-                    <div class="app-status">Đăng kí và xác nhận gói sản xuất</div>
-                </a>
-
-                <!-- [MỚI] REMOVE MACHINE - Chèn vào đây -->
-                <a href="https://xuanan2018.github.io/remove-machine/" target="_blank" class="app-card card-remove">
-                    <div class="icon-bubble">
-                        <i class="fas fa-satellite-dish"></i>
+                    <div class="card-content">
+                        <h3>Input Hourly Target</h3>
+                        <p>Nhập dữ liệu mục tiêu sản xuất hàng giờ theo thời gian thực.</p>
                     </div>
-                    <h3>Remove machine</h3>
-                    <div class="app-status">Xóa các IoT đã scanner hàng loạt</div>
                 </a>
 
-                <!-- External Tools -->
-                <a href="https://nnct2023.github.io/Addin-NXA/" target="_blank" class="app-card card-tool">
-                    <div class="icon-bubble"><i class="fas fa-puzzle-piece"></i></div>
-                    <h3>Addin NXA</h3>
-                    <div class="app-status">Tiện ích AI đa nền tảng dành cho Excel</div>
+                <!-- 2. IOT SCANNER PRO -->
+                <a href="batch-uploader.html" class="app-card" style="--card-color: var(--color-scanner)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-barcode"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>IoT Scanner Pro</h3>
+                        <p>Quét và gửi hàng loạt dữ liệu IoT cho các gói sản xuất.</p>
+                    </div>
                 </a>
 
-                <a href="https://xuanan2018.github.io/google-drive-converter/" target="_blank" class="app-card card-tool">
-                    <div class="icon-bubble"><i class="fas fa-sync"></i></div>
-                    <h3>Drive Converter</h3>
-                    <div class="app-status">Chuyển đổi thành liên kết tải xuống trực tiếp</div>
+                <!-- 3. DEFECT MANAGEMENT -->
+                <a href="defect.html" class="app-card" style="--card-color: var(--color-defect)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-bug"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Defect Management</h3>
+                        <p>Báo cáo, gửi ảnh và mô tả các lỗi phát sinh trên chuyền.</p>
+                    </div>
                 </a>
+
+                <!-- 4. MES IMAGE SEARCH (MỚI) -->
+                <a href="https://mes-image-search.pages.dev/" target="_blank" class="app-card" style="--card-color: var(--color-search)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-images"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>MES Image Search</h3>
+                        <p>Công cụ tìm kiếm và tra cứu hình ảnh sản phẩm/lỗi nhanh chóng.</p>
+                    </div>
+                </a>
+
+                <!-- 5. REMOVE MACHINE -->
+                <a href="https://xuanan2018.github.io/remove-machine/" target="_blank" class="app-card" style="--card-color: var(--color-remove)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-eraser"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Remove Machine</h3>
+                        <p>Gỡ bỏ hoặc reset các thiết bị IoT đã scan khỏi hệ thống.</p>
+                    </div>
+                </a>
+
+                <!-- 6. SEARCH PACKAGE GROUP -->
+                <a href="register.html" class="app-card" style="--card-color: var(--color-package)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-box-open"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Search PackageGroup</h3>
+                        <p>Tra cứu lịch sử PackageGroup trong vòng 6 tháng gần nhất.</p>
+                    </div>
+                </a>
+
+                <!-- 7. CONFIRM -->
+                <a href="confirm.html" class="app-card" style="--card-color: var(--color-confirm)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-clipboard-check"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Confirm Package</h3>
+                        <p>Đăng ký và xác nhận hoàn thành gói sản xuất.</p>
+                    </div>
+                </a>
+
+                <!-- 8. DRIVE CONVERTER -->
+                <a href="https://xuanan2018.github.io/google-drive-converter/" target="_blank" class="app-card" style="--card-color: var(--color-drive)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fab fa-google-drive"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Drive Converter</h3>
+                        <p>Chuyển đổi link Google Drive thành direct link tải xuống.</p>
+                    </div>
+                </a>
+
+                <!-- 9. ADDIN NXA -->
+                <a href="https://nnct2023.github.io/Addin-NXA/" target="_blank" class="app-card" style="--card-color: var(--color-addin)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-puzzle-piece"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Addin NXA</h3>
+                        <p>Tiện ích mở rộng hỗ trợ xử lý dữ liệu Excel đa nền tảng.</p>
+                    </div>
+                </a>
+
             </div>
 
-            <div class="stats-row">
-                <div class="stat-item">
-                    <i class="fas fa-server stat-icon" style="color: #3b82f6;"></i>
-                    <div class="stat-info">
-                        <h4>8</h4>
-                        <span>Modules Active</span>
+            <!-- Footer Stats -->
+            <div class="stats-section">
+                <div class="stat-card">
+                    <i class="fas fa-layer-group stat-icon" style="color: var(--primary);"></i>
+                    <div class="stat-details">
+                        <h4>09 Modules</h4>
+                        <span>Đang hoạt động</span>
                     </div>
                 </div>
-                <div class="stat-item">
-                    <i class="fas fa-wifi stat-icon" style="color: #10b981;"></i>
-                    <div class="stat-info">
-                        <h4>Online</h4>
-                        <span>System Status</span>
+                <div class="stat-card">
+                    <i class="fas fa-signal stat-icon" style="color: #10b981;"></i>
+                    <div class="stat-details">
+                        <h4>System Online</h4>
+                        <span>Kết nối ổn định</span>
                     </div>
                 </div>
-                
-                <!-- [CẬP NHẬT] ADMIN LINK -->
-                <a href="https://linktr.ee/chiscoong" target="_blank" class="stat-item" title="Click to visit Bio">
+                <a href="https://linktr.ee/chiscoong" target="_blank" class="stat-card" style="cursor: pointer;">
                     <i class="fas fa-user-shield stat-icon" style="color: #64748b;"></i>
-                    <div class="stat-info">
+                    <div class="stat-details">
                         <h4>Chí Công</h4>
-                        <span style="color: #3b82f6; font-size: 0.8rem;">Click to Bio <i class="fas fa-external-link-alt"></i></span>
+                        <span style="color: var(--primary); font-weight: 600;">Contact Admin &rarr;</span>
                     </div>
                 </a>
             </div>
@@ -302,9 +381,15 @@
     </div>
 
     <script>
+        // Toggle Sidebar
         document.getElementById('menuToggle').addEventListener('click', () => {
             document.getElementById('sidebar').classList.toggle('expanded');
         });
+
+        // Set Current Date
+        const dateElement = document.getElementById('currentDate');
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateElement.innerText = new Date().toLocaleDateString('vi-VN', options);
     </script>
 </body>
 </html>
