@@ -6,30 +6,31 @@
     <title>MES Unified Ecosystem | Dashboard</title>
     <!-- Font Awesome 6 Pro/Free -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Plus Jakarta Sans (Phông chữ hiện đại hơn Inter cho Dashboard) -->
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* --- 1. DESIGN TOKENS --- */
         :root {
-            /* Palette chuyên nghiệp */
-            --primary: #2563eb;          /* Xanh đậm tin cậy */
-            --primary-light: #eff6ff;
-            --bg-body: #f3f4f6;          /* Xám nhạt nền nã */
-            --bg-sidebar: #0f172a;       /* Slate đậm sang trọng */
+            /* Palette */
+            --primary: #2563eb;          
+            --bg-body: #f3f4f6;          
+            --bg-sidebar: #0f172a;       
             --text-main: #1e293b;
             --text-sub: #64748b;
             
-            /* Card Colors (Gradient nhẹ) */
-            --color-target: #0ea5e9;     /* Sky */
-            --color-scanner: #3b82f6;    /* Blue */
-            --color-defect: #ef4444;     /* Red */
-            --color-search: #8b5cf6;     /* Violet (Mới) */
-            --color-remove: #f59e0b;     /* Amber */
-            --color-package: #10b981;    /* Emerald */
-            --color-confirm: #14b8a6;    /* Teal */
-            --color-drive: #ec4899;      /* Pink */
-            --color-addin: #6366f1;      /* Indigo */
+            /* Card Colors (Phân loại màu sắc) */
+            --color-batch: #1e3a8a;      /* Navy (Mới - Số 1) */
+            --color-target: #0ea5e9;     /* Sky (Số 2) */
+            --color-scanner: #3b82f6;    /* Blue (Số 3) */
+            --color-defect: #ef4444;     /* Red (Số 4) */
+            --color-pkg-search: #f97316; /* Orange (Mới - Số 5) */
+            --color-search: #8b5cf6;     /* Violet (Số 6) */
+            --color-remove: #f59e0b;     /* Amber (Số 7) */
+            --color-package: #10b981;    /* Emerald (Số 8) */
+            --color-confirm: #14b8a6;    /* Teal (Số 9) */
+            --color-drive: #ec4899;      /* Pink (Số 10) */
+            --color-addin: #6366f1;      /* Indigo (Số 11) */
 
             --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -44,7 +45,7 @@
         /* --- 3. LAYOUT --- */
         .app-container { display: flex; min-height: 100vh; }
 
-        /* SIDEBAR (Đã tinh chỉnh lại mượt hơn) */
+        /* SIDEBAR */
         .sidebar {
             width: 80px;
             background: var(--bg-sidebar);
@@ -60,7 +61,6 @@
         }
         .sidebar.expanded { width: 280px; }
         
-        /* Header Logo Sidebar */
         .sidebar-header {
             height: 80px;
             display: flex;
@@ -99,7 +99,7 @@
         .nav-text { margin-left: 16px; font-weight: 500; opacity: 0; pointer-events: none; }
         .sidebar.expanded .nav-text { opacity: 1; pointer-events: auto; transition: opacity 0.3s 0.1s; }
 
-        /* MAIN AREA */
+        /* MAIN CONTENT */
         .main-content {
             flex: 1; margin-left: 80px; padding: 40px;
             transition: margin-left 0.4s cubic-bezier(0.2, 0, 0, 1);
@@ -107,7 +107,6 @@
         }
         .sidebar.expanded ~ .main-content { margin-left: 280px; width: calc(100% - 280px); }
 
-        /* --- 4. HEADER CONTENT --- */
         .top-bar {
             margin-bottom: 40px;
             display: flex; justify-content: space-between; align-items: flex-end;
@@ -121,14 +120,13 @@
             box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 8px;
         }
 
-        /* --- 5. GRID SYSTEM (REDESIGNED) --- */
+        /* DASHBOARD GRID */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 24px;
         }
 
-        /* MODERN CARD DESIGN */
         .app-card {
             background: #fff;
             border-radius: var(--radius);
@@ -143,13 +141,7 @@
             height: 100%;
         }
 
-        /* Hover Effect: Lift Up + Border Glow */
-        .app-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        /* Top colored line for each card */
+        .app-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
         .app-card::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
             background: var(--card-color, #ccc); opacity: 0; transition: 0.3s;
@@ -168,15 +160,13 @@
         }
         .app-card:hover .icon-box { transform: rotate(-5deg) scale(1.05); }
 
-        .card-arrow {
-            color: #cbd5e1; font-size: 1.2rem; transition: 0.3s;
-        }
+        .card-arrow { color: #cbd5e1; font-size: 1.2rem; transition: 0.3s; }
         .app-card:hover .card-arrow { color: var(--card-color); transform: translateX(5px); }
 
         .card-content h3 { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
         .card-content p { font-size: 0.9rem; color: var(--text-sub); line-height: 1.5; }
 
-        /* --- 6. STATS / FOOTER --- */
+        /* STATS FOOTER */
         .stats-section {
             margin-top: 50px;
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
@@ -188,15 +178,11 @@
             transition: 0.3s;
         }
         .stat-card:hover { transform: translateY(-4px); border-color: var(--primary); }
-        
         .stat-icon { font-size: 2rem; opacity: 0.8; }
         .stat-details h4 { font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 2px; }
         .stat-details span { font-size: 0.85rem; color: var(--text-sub); font-weight: 500; }
 
-        /* --- RESPONSIVE --- */
-        @media (max-width: 992px) {
-            .stats-section { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 992px) { .stats-section { grid-template-columns: 1fr; } }
         @media (max-width: 768px) {
             .sidebar { width: 0; transform: translateX(-100%); }
             .sidebar.expanded { width: 280px; transform: translateX(0); }
@@ -221,7 +207,7 @@
                         <i class="nav-icon fas fa-grid-2"></i><span class="nav-text">Dashboard</span>
                     </a>
                 </li>
-                <!-- Sidebar links shortcut -->
+                <!-- Sidebar shortcuts -->
                 <li class="nav-item"><a href="batch-uploader.html" class="nav-link"><i class="nav-icon fas fa-cloud-upload"></i><span class="nav-text">IoT Scanner</span></a></li>
                 <li class="nav-item"><a href="defect.html" class="nav-link"><i class="nav-icon fas fa-triangle-exclamation"></i><span class="nav-text">Defect Manager</span></a></li>
                 <li class="nav-item"><a href="register.html" class="nav-link"><i class="nav-icon fas fa-magnifying-glass"></i><span class="nav-text">Search Package</span></a></li>
@@ -243,7 +229,19 @@
             
             <div class="dashboard-grid">
                 
-                <!-- 1. HOURLY TARGET -->
+                <!-- 1. [MỚI] HOURLY TARGET (BATCH) -->
+                <a href="https://mes-pro.netlify.app/" target="_blank" class="app-card" style="--card-color: var(--color-batch)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-layer-group"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Hourly Target (Batch)</h3>
+                        <p>Nhập dữ liệu mục tiêu sản xuất theo chế độ hàng loạt (Batch Mode).</p>
+                    </div>
+                </a>
+
+                <!-- 2. [DỜI XUỐNG] INPUT HOURLY TARGET -->
                 <a href="https://input-hourly-target.pages.dev/" target="_blank" class="app-card" style="--card-color: var(--color-target)">
                     <div class="card-header">
                         <div class="icon-box"><i class="fas fa-bullseye"></i></div>
@@ -251,11 +249,11 @@
                     </div>
                     <div class="card-content">
                         <h3>Input Hourly Target</h3>
-                        <p>Nhập dữ liệu mục tiêu sản xuất hàng giờ theo thời gian thực.</p>
+                        <p>Nhập dữ liệu mục tiêu sản xuất hàng giờ theo thời gian thực (Đơn lẻ).</p>
                     </div>
                 </a>
 
-                <!-- 2. IOT SCANNER PRO -->
+                <!-- 3. [DỜI XUỐNG] IOT SCANNER PRO -->
                 <a href="batch-uploader.html" class="app-card" style="--card-color: var(--color-scanner)">
                     <div class="card-header">
                         <div class="icon-box"><i class="fas fa-barcode"></i></div>
@@ -267,7 +265,7 @@
                     </div>
                 </a>
 
-                <!-- 3. DEFECT MANAGEMENT -->
+                <!-- 4. [DỜI XUỐNG] DEFECT MANAGEMENT -->
                 <a href="defect.html" class="app-card" style="--card-color: var(--color-defect)">
                     <div class="card-header">
                         <div class="icon-box"><i class="fas fa-bug"></i></div>
@@ -279,7 +277,19 @@
                     </div>
                 </a>
 
-                <!-- 4. MES IMAGE SEARCH (MỚI) -->
+                <!-- 5. [MỚI] PACKAGE SEARCH -->
+                <a href="https://xuanan2018.github.io/Package-Search/" target="_blank" class="app-card" style="--card-color: var(--color-pkg-search)">
+                    <div class="card-header">
+                        <div class="icon-box"><i class="fas fa-box-archive"></i></div>
+                        <i class="fas fa-arrow-right card-arrow"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Package Search</h3>
+                        <p>Tra cứu thông tin chi tiết của Package (Gói sản xuất).</p>
+                    </div>
+                </a>
+
+                <!-- 6. [DỜI XUỐNG] MES IMAGE SEARCH -->
                 <a href="https://mes-image-search.pages.dev/" target="_blank" class="app-card" style="--card-color: var(--color-search)">
                     <div class="card-header">
                         <div class="icon-box"><i class="fas fa-images"></i></div>
@@ -291,7 +301,7 @@
                     </div>
                 </a>
 
-                <!-- 5. REMOVE MACHINE -->
+                <!-- 7. [DỜI XUỐNG] REMOVE MACHINE -->
                 <a href="https://xuanan2018.github.io/remove-machine/" target="_blank" class="app-card" style="--card-color: var(--color-remove)">
                     <div class="card-header">
                         <div class="icon-box"><i class="fas fa-eraser"></i></div>
@@ -303,7 +313,7 @@
                     </div>
                 </a>
 
-                <!-- 6. SEARCH PACKAGE GROUP -->
+                <!-- 8. [DỜI XUỐNG] SEARCH PACKAGE GROUP -->
                 <a href="register.html" class="app-card" style="--card-color: var(--color-package)">
                     <div class="card-header">
                         <div class="icon-box"><i class="fas fa-box-open"></i></div>
@@ -315,7 +325,7 @@
                     </div>
                 </a>
 
-                <!-- 7. CONFIRM -->
+                <!-- 9. [DỜI XUỐNG] CONFIRM -->
                 <a href="confirm.html" class="app-card" style="--card-color: var(--color-confirm)">
                     <div class="card-header">
                         <div class="icon-box"><i class="fas fa-clipboard-check"></i></div>
@@ -327,7 +337,7 @@
                     </div>
                 </a>
 
-                <!-- 8. DRIVE CONVERTER -->
+                <!-- 10. [DỜI XUỐNG] DRIVE CONVERTER -->
                 <a href="https://xuanan2018.github.io/google-drive-converter/" target="_blank" class="app-card" style="--card-color: var(--color-drive)">
                     <div class="card-header">
                         <div class="icon-box"><i class="fab fa-google-drive"></i></div>
@@ -339,7 +349,7 @@
                     </div>
                 </a>
 
-                <!-- 9. ADDIN NXA -->
+                <!-- 11. [DỜI XUỐNG] ADDIN NXA -->
                 <a href="https://nnct2023.github.io/Addin-NXA/" target="_blank" class="app-card" style="--card-color: var(--color-addin)">
                     <div class="card-header">
                         <div class="icon-box"><i class="fas fa-puzzle-piece"></i></div>
@@ -358,7 +368,7 @@
                 <div class="stat-card">
                     <i class="fas fa-layer-group stat-icon" style="color: var(--primary);"></i>
                     <div class="stat-details">
-                        <h4>09 Modules</h4>
+                        <h4>11 Modules</h4>
                         <span>Đang hoạt động</span>
                     </div>
                 </div>
