@@ -3,102 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Drive Converter - MES Unified App</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Drive Converter - MES Ecosystem</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #f1f5f9; color: #1e293b; min-height: 100vh; overflow: hidden; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        :root { --sidebar-bg: #0f172a; --sidebar-text: #94a3b8; --primary: #3b82f6; }
+        .app-container { display: flex; height: 100vh; }
+
+        .left-sidebar {
+            width: 72px; background: var(--sidebar-bg); color: var(--sidebar-text);
+            display: flex; flex-direction: column;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0; z-index: 100;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.1); overflow: hidden;
+        }
+        .left-sidebar.expanded { width: 260px; }
+        .sidebar-header {
+            height: 70px; display: flex; align-items: center; padding: 0 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05); flex-shrink: 0;
+        }
+        .menu-btn {
+            background: transparent; border: none; color: #fff; cursor: pointer;
+            font-size: 1.2rem; width: 40px; height: 40px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .menu-btn:hover { background: rgba(255,255,255,0.1); }
+        .brand {
+            margin-left: 12px; font-weight: 700; font-size: 1.2rem; color: #fff;
+            white-space: nowrap; opacity: 0; transition: opacity 0.2s;
+        }
+        .left-sidebar.expanded .brand { opacity: 1; transition-delay: 0.1s; }
+
+        .nav-scroll { flex: 1; overflow-y: auto; padding: 4px 0; }
+        .nav-scroll::-webkit-scrollbar { width: 3px; }
+        .nav-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+        .nav-divider {
+            height: 0; margin: 0 12px; opacity: 0; pointer-events: none;
+            transition: all 0.25s; overflow: hidden;
+        }
+        .nav-divider:not(:first-of-type) {
+            margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 8px; height: 28px;
+        }
+        .left-sidebar.expanded .nav-divider { opacity: 1; }
+        .nav-group-label {
+            font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.08em; color: rgba(148, 163, 184, 0.4);
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .nav-item { margin: 2px 8px; }
+        .nav-link {
+            display: flex; align-items: center; height: 42px; padding: 0 12px;
+            border-radius: 10px; color: var(--sidebar-text); white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .nav-item.active .nav-link { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .nav-icon { min-width: 24px; font-size: 1.1rem; text-align: center; }
+        .nav-text {
+            margin-left: 12px; font-size: 0.88rem; font-weight: 500;
+            opacity: 0; pointer-events: none;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .left-sidebar.expanded .nav-text { opacity: 1; pointer-events: auto; transition: opacity 0.2s 0.1s; }
+        .cookie-tag {
+            font-size: 0.55rem;
+            background: rgba(217, 119, 6, 0.2);
+            color: #fbbf24;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; padding: 20px; overflow: hidden; }
+        .tool-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; flex-shrink: 0; }
+        .tool-header a {
+            background: #fff; width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: #475569; transition: 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .tool-header a:hover { background: var(--primary); color: #fff; }
+        .tool-header h2 { font-size: 1.3rem; font-weight: 700; }
+
+        .iframe-wrapper {
+            flex: 1; background: #fff; border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.05); position: relative; overflow: hidden;
+        }
+        .iframe-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
+        .loading-indicator {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); text-align: center; color: #64748b; z-index: 10;
+        }
+        .loading-indicator i { font-size: 2.5rem; color: var(--primary); margin-bottom: 12px; }
+
+        @media (max-width: 768px) {
+            .left-sidebar { position: fixed; height: 100%; transform: translateX(-100%); width: 260px; }
+            .left-sidebar.mobile-open { transform: translateX(0); }
+            .main-content { width: 100%; padding: 12px; }
+            .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+            .mobile-overlay.active { display: block; }
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+        <aside class="left-sidebar" id="leftSidebar">
             <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-industry"></i>
-                    <span class="site-title">MES Unified App</span>
-                </div>
-                <button class="menu-toggle" id="menuToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button class="menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <a href="index.html" class="brand" style="cursor:pointer;">MES Ecosystem</a>
             </div>
-            
-            <nav class="sidebar-nav">
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="index.html" class="nav-link">
-                            <i class="nav-icon fas fa-home"></i>
-                            <span class="nav-text">Trang Chủ</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="batch-uploader.html" class="nav-link">
-                            <i class="nav-icon fas fa-upload"></i>
-                            <span class="nav-text">Batch Uploader</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="defect.html" class="nav-link">
-                            <i class="nav-icon fas fa-bug"></i>
-                            <span class="nav-text">Defect Management</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="register.html" class="nav-link">
-                            <i class="nav-icon fas fa-edit"></i>
-                            <span class="nav-text">Register</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="confirm.html" class="nav-link">
-                            <i class="nav-icon fas fa-check-circle"></i>
-                            <span class="nav-text">Confirm</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="addin-nxa.html" class="nav-link">
-                            <i class="nav-icon fas fa-puzzle-piece"></i>
-                            <span class="nav-text">Addin NXA</span>
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a href="google-drive-converter.html" class="nav-link">
-                            <i class="nav-icon fas fa-sync-alt"></i>
-                            <span class="nav-text">Drive Converter</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <div class="user-info">
-                    <i class="fas fa-user-circle"></i>
-                    <span>MES System</span>
-                </div>
-            </div>
+            <div class="nav-scroll" id="leftNav"></div>
         </aside>
-
-        <!-- Main Content -->
         <main class="main-content">
-            <div class="content-header">
-                <h1>Google Drive Converter</h1>
-                <p class="page-description">Chuyển đổi và xử lý file từ Google Drive</p>
+            <div class="tool-header">
+                <a href="index.html"><i class="fas fa-arrow-left"></i></a>
+                <h2>Drive Converter</h2>
             </div>
-            
-            <div class="content-body">
-                <div class="app-frame-wrapper">
-                    <div class="loading-indicator" id="loadingConverter">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Đang tải Drive Converter...</p>
-                    </div>
-                    <iframe 
-                        src="https://xuanan2018.github.io/google-drive-converter/" 
-                        class="app-container-frame"
-                        onload="document.getElementById('loadingConverter').style.display='none'"
-                    ></iframe>
+            <div class="iframe-wrapper">
+                <div class="loading-indicator" id="loadingTool">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                    <p>Đang tải Drive Converter...</p>
                 </div>
+                <iframe id="toolIframe" src="https://xuanan2018.github.io/google-drive-converter/" style="opacity:0; transition: opacity 0.3s;"></iframe>
             </div>
         </main>
     </div>
+    <script>
+        const tools = [
+            { id: 'hourly-batch',    name: 'Hourly Target (Batch)', icon: 'fa-layer-group',       color: '#1e3a8a', group: 'mes' },
+            { id: 'hourly-input',    name: 'Input Hourly Target',   icon: 'fa-bullseye',           color: '#0ea5e9', group: 'mes' },
+            { id: 'iot-scanner',     name: 'IoT Scanner Pro',       icon: 'fa-barcode',           color: '#3b82f6', group: 'mes' },
+            { id: 'defect',          name: 'Defect Management',     icon: 'fa-bug',               color: '#ef4444', group: 'mes' },
+            { id: 'image-search',    name: 'MES Image Search',      icon: 'fa-images',            color: '#8b5cf6', group: 'mes' },
+            { id: 'remove-machine',  name: 'Remove Machine',        icon: 'fa-eraser',            color: '#f59e0b', group: 'mes' },
+            { id: 'package-search',  name: 'Package Search',        icon: 'fa-box-archive',       color: '#f97316', group: 'cookie' },
+            { id: 'package-group',   name: 'Search PackageGroup',   icon: 'fa-box-open',          color: '#10b981', group: 'cookie' },
+            { id: 'confirm-package', name: 'Confirm Package',       icon: 'fa-clipboard-check',   color: '#14b8a6', group: 'cookie' },
+            { id: 'drive-converter', name: 'Drive Converter',       icon: 'fa-right-left',      color: '#ec4899', group: 'utility' },
+            { id: 'addin-nxa',       name: 'Addin NXA',             icon: 'fa-puzzle-piece',      color: '#6366f1', group: 'utility' }
+        ];
+        const groups = [
+            { key: 'mes', label: 'Sản xuất', icon: 'fa-industry' },
+            { key: 'cookie', label: 'Cookie', icon: 'fa-cookie-bite' },
+            { key: 'utility', label: 'Tiện ích', icon: 'fa-toolbox' }
+        ];
+        const pages = { 'iot-scanner':'batch-uploader.html','defect':'defect.html','package-group':'register.html','confirm-package':'confirm.html','addin-nxa':'addin-nxa.html','drive-converter':'google-drive-converter.html' };
+        const currentToolId = 'drive-converter';
 
-    <script src="assets/js/main.js"></script>
+        function renderLeftSidebar() {
+            let html = '<ul class="nav-list"><li class="nav-item"><a href="index.html" class="nav-link"><i class="nav-icon fas fa-grid-2"></i><span class="nav-text">Dashboard</span></a></li>';
+            groups.forEach(g => {
+                const items = tools.filter(t => t.group === g.key);
+                const isCookie = g.key === 'cookie';
+                html += `<li class="nav-divider"><span class="nav-group-label"><i class="fas ${g.icon}"></i>${isCookie ? ' 🍪' : ''} ${g.label}</span></li>`;
+                items.forEach(t => {
+                    html += `<li class="nav-item${t.id === currentToolId ? ' active' : ''}"><a href="${pages[t.id] || 'index.html#' + t.id}" class="nav-link"><i class="nav-icon fas ${t.icon}"></i><span class="nav-text">${t.name}${isCookie ? ' <span class="cookie-tag">🍪</span>' : ''}</span></a></li>`;
+                });
+            });
+            html += '</ul>';
+            document.getElementById('leftNav').innerHTML = html;
+        }
+
+        document.getElementById('toolIframe').addEventListener('load', function() {
+            document.getElementById('loadingTool').style.display = 'none';
+            this.style.opacity = '1';
+        });
+        document.getElementById('menuToggle').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const s = document.getElementById('leftSidebar');
+            if (window.innerWidth <= 768) {
+                s.classList.toggle('mobile-open');
+                document.getElementById('mobileOverlay').classList.toggle('active');
+            } else { s.classList.toggle('expanded'); }
+        });
+        document.getElementById('mobileOverlay').addEventListener('click', function() {
+            document.getElementById('leftSidebar').classList.remove('mobile-open');
+            this.classList.remove('active');
+        });
+        renderLeftSidebar();
+    </script>
 </body>
 </html>
