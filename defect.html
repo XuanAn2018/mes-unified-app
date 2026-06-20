@@ -143,6 +143,7 @@
             { id: 'hourly-batch',    name: 'Hourly Target (Batch)', icon: 'fa-layer-group',       color: '#1e3a8a', group: 'mes' },
             { id: 'hourly-input',    name: 'Input Hourly Target',   icon: 'fa-bullseye',           color: '#0ea5e9', group: 'mes' },
             { id: 'iot-scanner',     name: 'IoT Scanner Pro',       icon: 'fa-barcode',           color: '#3b82f6', group: 'mes' },
+            { id: 'shipping-schedule', name: 'Shipping Schedule',   icon: 'fa-ship',              color: '#0891b2', group: 'mes' },
             { id: 'defect',          name: 'Defect Management',     icon: 'fa-bug',               color: '#ef4444', group: 'mes' },
             { id: 'image-search',    name: 'MES Image Search',      icon: 'fa-images',            color: '#8b5cf6', group: 'mes' },
             { id: 'remove-machine',  name: 'Remove Machine',        icon: 'fa-eraser',            color: '#f59e0b', group: 'mes' },
@@ -157,7 +158,7 @@
             { key: 'cookie', label: 'Cookie', icon: 'fa-cookie-bite' },
             { key: 'utility', label: 'Tiện ích', icon: 'fa-toolbox' }
         ];
-        const pages = { 'iot-scanner':'batch-uploader.html','defect':'defect.html','package-group':'register.html','confirm-package':'confirm.html','addin-nxa':'addin-nxa.html','drive-converter':'google-drive-converter.html' };
+        const pages = { 'iot-scanner':'batch-uploader.html','shipping-schedule':'shipping-schedule.html','defect':'defect.html','package-group':'register.html','confirm-package':'confirm.html','addin-nxa':'addin-nxa.html','drive-converter':'google-drive-converter.html' };
         const currentToolId = 'defect';
 
         function renderLeftSidebar() {
